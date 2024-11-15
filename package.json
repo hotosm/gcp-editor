@@ -9,9 +9,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@geomatico/maplibre-cog-protocol": "^0.3.1",
-    "lit": "^3.2.1",
-    "maplibre-gl": "^4.7.1"
+    "@openlayers-elements/core": "^0.4.0",
+    "@openlayers-elements/maps": "^0.4.0",
+    "lit": "^3.2.1"
   },
   "devDependencies": {
     "typescript": "~5.6.2",
