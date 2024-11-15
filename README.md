@@ -12,14 +12,20 @@
 
 - The most suitable candidate for this is a Web Component.
 - A Web Component can be standalone, easily embedded anywhere on the web.
-- Ideally we can use [geotiff.js](https://github.com/geotiffjs/geotiff.js)
-  to load the file directly, do a bit of maths, and get what we need.
-- If this is complex, we may need to pull in a mapping library:
-  - OpenLayers: has native support for COG, plus raster reprojection.
-    - Example implementation: https://github.com/geotiffjs/cog-explorer
-  - MapLibre: has a new
-    [COG protocol extension](https://github.com/geomatico/maplibre-cog-protocol),
-    but only supports EPSG:3857.
+- We have an image georeferenced by a drone in EPSG:4326.
+- Ideally we need to reproject EPSG:4326 to a cartesian UTM projection,
+  allowing us to accurately extract pixel coordinates from the image
+  and pair them with lat/lon coords in real life.
+- By far the best candidate for this is OpenLayers, the mapping library
+  with the best projection support.
+- We may also need to use [geotiff.js](https://github.com/geotiffjs/geotiff.js)
+  for low level calculations / math to achieve what we need.
+- An example using both can be found at https://github.com/geotiffjs/cog-explorer
+
+> Note that MapLibre has a new
+> [COG protocol extension](https://github.com/geomatico/maplibre-cog-protocol), 
+> but this only supports EPSG:3857 images and we do not wish to introduce
+> that inaccuracy when dealing with precise GCP.
 
 Related forum post that will influence our decisions here:
 https://community.opendronemap.org/t/passing-different-output-projections-to-odm-eg-a-proj-flag/22460
