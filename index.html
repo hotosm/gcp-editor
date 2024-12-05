@@ -6,9 +6,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>GCP Editor</title>
     <link rel="stylesheet" href="./src/index.css" />
-    <script type="module" src="/src/gcp-editor.ts"></script>
+    <!-- <script type="module" src="/src/gcp-editor.ts"></script> -->
+    <script type="module" src="/src/gcp-editor-wrapper.ts"></script>
+    <style>
+     *,
+*::before,
+*::after {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+*{
+  padding:0;
+  margin:0;
+  box-sizing: border-box;
+}
+
+    </style>
+
   </head>
   <body>
+    <!-- <gcp-editor></gcp-editor> -->
     <gcp-editor></gcp-editor>
   </body>
 </html>
