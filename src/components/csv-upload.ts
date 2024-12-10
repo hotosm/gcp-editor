@@ -11,22 +11,6 @@ export class CsvUpload extends LitElement {
     :host {
       width:100%
       display: block;
-      padding: 28px 12px;
-    }
-    #input-wrapper {
-      display: flex;
-      gap: 10px;
-    }
-    #gcp-file-input {
-      opacity: 0;
-      height: 38px;
-    }
-    #gcp-file-input-label {
-      border: solid 1px black;
-      border-radius: 8px;
-      display: block;
-      position: relative;
-
     }
   `;
 
@@ -47,14 +31,34 @@ export class CsvUpload extends LitElement {
 
   render() {
     return html`
-      <div id="file-input-wrapper">
-        <label for="gcp-file-input" id="gcp-file-input-label">
-          <span style="padding:10px 4px; position: absolute;">
-            ${this.gcpFile ? this?.gcpFile?.name : 'Choose .csv file with geo coordinates'}
-          </span>
-          <input type="file" name="gcp-file" id="gcp-file-input" @change=${this.handleFileInputChange} accept=".csv" />
+      <div class="max-w-full">
+        <label
+          class=" border-gray-400 border-dashed border-2 rounded-lg h-20 w-full flex items-center justify-center relative"
+        >
+          <input
+            type="file"
+            name="gcp-file"
+            class="h-24 opacity-0 absolute"
+            @change=${this.handleFileInputChange}
+            accept=".csv"
+          />
+          <div class="flex flex-col items-center justify-center">
+            <span class="material-symbols-outlined text-primary">cloud_upload</span>
+            <span class="text font-light">
+              ${this.gcpFile ? this?.gcpFile?.name : 'The Supported file format is .csv'}
+            </span>
+          </div>
         </label>
       </div>
+      <div>
+        <csv-preview></csv-preview>
+      </div>
+      ${this?.gcpFile?.name &&
+      html`
+        <div class="py-5 flex justify-end">
+          <hot-button>upload</hot-button>
+        </div>
+      `}
     `;
   }
 }
