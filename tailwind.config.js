@@ -1,5 +1,5 @@
 module.exports = {
-  content: ['./src/**/*.{html,js,ts}'],
+  content: ['./index.html', './src/**/*.{html,js,ts}'],
   theme: {
     colors: {
       primary: '#D73F3F',
@@ -23,4 +23,5 @@ module.exports = {
     extend: {},
   },
   plugins: [],
+  prefix: 'tw-',
 };
