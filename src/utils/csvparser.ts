@@ -5,11 +5,12 @@
  */
 export function parseCSVFile(file: File): Promise<Array<Array<string>>> {
   return new Promise((resolve, reject) => {
-    // Check if the file is a CSV
-    if (file.type !== 'text/csv') {
-      reject(new Error('The file is not a CSV.'));
+    // Check if the file is a text file or Excel CSV type
+    if (!file.type.includes('text') && !file.type.includes('ms-excel')) {
+      reject(new Error('The file is not a valid text file.'));
       return;
     }
+
     const reader = new FileReader();
 
     reader.onload = () => {
