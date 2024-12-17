@@ -6,28 +6,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>GCP Editor</title>
     <link rel="stylesheet" href="./src/index.css" />
-    <link rel="stylesheet" href="./src/styles/tailwind.css" />
+    <link rel="stylesheet" href="./src/styles/tailwind.css" id="tailwind-styles"/>
+    <link href="https://fonts.cdnfonts.com/css/barlow-condensed" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" id="material-symbols"/>
     <!-- <script type="module" src="/src/gcp-editor.ts"></script> -->
-    <script type="module" src="/src/gcp-editor-wrapper.ts"></script>
+    <script type="module" src="./src/gcp-editor-wrapper.ts"></script>
     <style>
-     *,
-      *::before,
-      *::after {
-        box-sizing: border-box;
-        padding: 0;
-        margin: 0;
-      }
-      *{
-        padding:0;
-        margin:0;
-        box-sizing: border-box;
-      }
-    </style>
+      *,
+     *::before,
+     *::after {
+       box-sizing: border-box;
+       padding: 0;
+       margin: 0;
+     }
+     .main-component-wrapper{
+       height:100vh;
+       width:100vw;
+     }
+   </style>
   </head>
   <body>
-    <!-- <gcp-editor></gcp-editor> -->
+    <div class="main-component-wrapper">
     <gcp-editor></gcp-editor>
-    <script src="./src/styles/global-style-injector.js"></script>
-
+    </div>
   </body>
 </html>
