@@ -1,18 +1,16 @@
-import { css, html, LitElement } from 'lit';
+import { html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { parseCSVFile } from '../utils/csvparser';
-import { Store } from '../store';
+import { parseCSVFile } from '../../utils/csvparser';
+import { Store } from '../../store';
+import './csv-preview';
 
 @customElement('csv-upload')
 export class CsvUpload extends LitElement {
   @property({ type: Object }) gcpFile: File | null = null;
-
-  static styles = css`
-    :host {
-      width:100%
-      display: block;
-    }
-  `;
+  createRenderRoot() {
+    // Return `this` instead of a shadow root, meaning no Shadow DOM is used
+    return this;
+  }
 
   private handleFileInputChange(event: Event) {
     const input = event.target as HTMLInputElement;
@@ -31,20 +29,20 @@ export class CsvUpload extends LitElement {
 
   render() {
     return html`
-      <div class="max-w-full">
+      <div class="tw-max-w-full">
         <label
-          class=" border-gray-400 border-dashed border-2 rounded-lg h-20 w-full flex items-center justify-center relative"
+          class=" tw-border-gray-400 tw-border-dashed tw-border-2 tw-rounded-lg tw-h-20 tw-w-full tw-flex tw-items-center tw-justify-center tw-relative"
         >
           <input
             type="file"
             name="gcp-file"
-            class="h-24 opacity-0 absolute"
+            class="tw-h-24 tw-opacity-0 tw-absolute"
             @change=${this.handleFileInputChange}
             accept=".csv"
           />
-          <div class="flex flex-col items-center justify-center">
-            <span class="material-symbols-outlined text-primary">cloud_upload</span>
-            <span class="text font-light">
+          <div class="tw-flex tw-flex-col tw-items-center tw-justify-center">
+            <span class="material-symbols-outlined tw-text-primary">cloud_upload</span>
+            <span class="tw-text tw-font-light">
               ${this.gcpFile ? this?.gcpFile?.name : 'The Supported file format is .csv'}
             </span>
           </div>
@@ -53,12 +51,6 @@ export class CsvUpload extends LitElement {
       <div>
         <csv-preview></csv-preview>
       </div>
-      ${this?.gcpFile?.name &&
-      html`
-        <div class="py-5 flex justify-end">
-          <hot-button>upload</hot-button>
-        </div>
-      `}
     `;
   }
 }

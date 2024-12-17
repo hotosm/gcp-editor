@@ -1,10 +1,11 @@
 import { css, html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { Store } from '../store';
+import { Store } from '../../store';
 
 @customElement('csv-preview')
 export class CsvPreview extends LitElement {
   @property({ type: Object }) gcpData: String[][] = Store.getGcpData();
+  @property() gcpGeojson: any;
 
   connectedCallback() {
     super.connectedCallback();
@@ -20,6 +21,19 @@ export class CsvPreview extends LitElement {
   handleGcpDataUpdate(event: Event) {
     const CustomEvent = event as CustomEvent<any>;
     this.gcpData = CustomEvent?.detail;
+    const gcpPointsGeojson = {
+      type: 'FeatureCollection',
+      features: this.gcpData.slice(1).map((data: any, index: number) => ({
+        type: 'Feature',
+        geometry: {
+          type: 'Point',
+          coordinates: [data[2], data[1]],
+        },
+        properties: { label: data[0] || `Gcp${index}` },
+      })),
+    };
+    this.gcpGeojson = gcpPointsGeojson;
+    Store.setGcpGeojson(gcpPointsGeojson);
   }
 
   static styles = css`
@@ -46,11 +60,6 @@ export class CsvPreview extends LitElement {
       background-color: #f73f3f;
       color: white;
       font-weight: bold;
-    }
-
-    tr:hover {
-      background-color: #ffeded;
-      cursor: pointer;
     }
 
     td {
