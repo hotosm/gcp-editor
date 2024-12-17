@@ -2,10 +2,31 @@ import { css, html, LitElement, PropertyValues } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { Store } from '../../store';
 
+// Define the type for a row in the gcp.txt file
+// [X Y Z ImageX ImageY FileName.jpg]
+// e.g. 544256.7 5320919.9 5 3044 2622 IMG_0525.jpg
+// https://docs.opendronemap.org/gcp/
+type GcpRow = [number, number, number, number, number, string];
+
+/**
+ * GcpResult Component
+ * 
+ * This component renders a list of Ground Control Points (GCP) as a table
+ * and provides functionality to download the data in a custom text format.
+ */
 @customElement('gcp-result')
 export class GcpResult extends LitElement {
+  /**
+   * Property: gcpList
+   * Holds the raw GCP data fetched from the store.
+   */
   @property() gcpList = Store.getGcpDataWithXY();
-  @property() gcpInCsv: any = [];
+
+  /**
+   * Property: gcpInCsv
+   * A processed version of `gcpList` that represents GCP data as an array of rows.
+   */
+  @property() gcpInCsv: GcpRow[] = [];
 
   static styles = css`
     :host {
@@ -59,25 +80,78 @@ export class GcpResult extends LitElement {
     }
   `;
 
+  /**
+   * Lifecycle method: firstUpdated
+   * Called when the component is first rendered. Processes the GCP list into a usable format.
+   * @param _changedProperties Properties that changed when the component updated.
+   */
   protected firstUpdated(_changedProperties: PropertyValues): void {
     this.gcpInCsv = this.convertToArray(this.gcpList);
   }
 
-  private convertToArray(data: any) {
-    const result = [];
-    const headers = ['File Name', 'GCP Label', 'X', 'Y', 'Z', 'Image X', 'Image Y'];
-    // Add headers to the result array
+  /**
+   * Converts raw GCP data into an array of rows.
+   * Each row represents a single GCP entry.
+   * @param data The raw GCP data to process.
+   * @returns An array of rows with headers included.
+   */
+  private convertToArray(data: any): GcpRow[] {
+    const result: GcpRow[] = [];
+    const headers: GcpRow = ['X', 'Y', 'Z', 'Image X', 'Image Y', 'File Name'];
+  
+    // Add headers (these are removed on download, but there for information only)
     result.push(headers);
-    // Loop through each "group" (e.g., '1', '2') in the data
+  
     for (const group in data) {
-      // Loop through each file in the group (e.g., 'DJI_20240503142205_0095_D.JPG')
       for (const fileName in data[group]) {
         const entry = data[group][fileName];
-        // Prepare a row with the necessary data
-        result.push([entry.fileName, entry.gcpLabel, entry.X, entry.Y, entry.Z, entry.imageX, entry.imageY]);
+        result.push([
+          entry.X,          // X
+          entry.Y,          // Y
+          entry.Z,          // Z
+          entry.imageX,     // Image X
+          entry.imageY,     // Image Y
+          entry.fileName    // File Name
+        ]);
       }
     }
+  
     return result;
+  }
+   
+  /**
+   * Handles the GCP file download functionality.
+   * Generates a space-separated text file in a custom format and triggers its download.
+   */
+  private handleGcpFileDownload() {
+    if (!this.gcpInCsv || this.gcpInCsv.length <= 1) return;
+
+    // Header for the projection (hardcoded for now)
+    // TODO support other coord systems / not hardcoded to EPSG:4326
+    const header = '+proj=utm +zone=10 +ellps=WGS84 +datum=WGS84 +units=m +no_defs\n';
+
+    // Convert GCP data to space-separated rows
+    const rows = this.gcpInCsv
+      .slice(1) // Skip headers
+      .map((row) => `${row[0]} ${row[1]} ${row[2]} ${row[3]} ${row[4]} ${row[5]}`) // Format: X Y Z ImageX ImageY FileName
+      .join('\n');
+    
+    const finalContent = header + rows;
+
+    // Create a Blob for the file and trigger download
+    const blob = new Blob([finalContent], { type: 'text/plain;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+
+    a.href = url;
+    a.download = 'gcp.txt';
+    a.style.display = 'none';
+
+    document.body.appendChild(a);
+    a.click();
+
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
   }
 
   render() {
@@ -87,22 +161,16 @@ export class GcpResult extends LitElement {
           <thead>
             <tr>
               ${this.gcpInCsv?.[0]?.map(
-                (header: String) =>
-                  html`
-                    <th>${header}</th>
-                  `
+                (header: string) => html`<th>${header}</th>`
               )}
             </tr>
           </thead>
           <tbody>
             ${this.gcpInCsv?.slice(1).map(
-              (row: Array<String>) => html`
+              (row: GcpRow) => html`
                 <tr>
                   ${row.map(
-                    (cell: String) =>
-                      html`
-                        <td>${cell}</td>
-                      `
+                    (cell: string | number) => html`<td>${cell}</td>`
                   )}
                 </tr>
               `
@@ -110,6 +178,7 @@ export class GcpResult extends LitElement {
           </tbody>
         </table>
       </div>
+      <hot-button @click=${this.handleGcpFileDownload}>Download</hot-button>
     `;
   }
 }
