@@ -1,7 +1,6 @@
 import { html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { Store } from '../../store';
-import '../upload-images';
 import './raw-image-marker';
 
 @customElement('raw-image-upload')

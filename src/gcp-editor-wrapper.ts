@@ -1,73 +1,83 @@
-import { LitElement, html, css } from 'lit';
+import { html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import './components/csv-upload';
-import './components/csv-preview';
-import './components/gcp-marker';
-import './components/projection-input';
-import './components/load-btn';
-import { GcpMarker } from './components/gcp-marker';
+import { Store } from './store';
+import '@shoelace-style/shoelace';
+import '@shoelace-style/shoelace/dist/themes/light.css';
+import '@hotosm/ui/dist/hotosm-ui';
+import './components/GcpDataInput/index';
+import './components/GcpMarking/index';
+import './components/GcpResult/index';
 
 @customElement('gcp-editor')
 export class GcpEditor extends LitElement {
-  // Property to hold the gcp
-  @property({ type: Object }) gcpFile: File | null = null;
+  @property({ type: Number }) activeStep = 1;
+  @property() gcpData = null;
+  @property() setGcpDataWithXY = {};
 
-  static styles = css`
-    :host {
-      display: block;
-    }
-    .wrapper {
-      height: 100vh;
-      width: 100vw;
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-    }
-    .input-section {
-      width: 100%;
-      height: 100%;
-      /* background: #73ee87; */
-      overflow: auto;
-    }
-    .map-section {
-      width: 100%;
-      height: 100%;
-      /* background: #73c7ee; */
-    }
-    .main-input-wrapper {
-      display: grid;
-      width: 100%;
-      grid-template-columns: 1fr 250px;
-      gap: 12px;
-    }
-  `;
+  createRenderRoot() {
+    // Return `this` instead of a shadow root, meaning no Shadow DOM is used
+    return this;
+  }
 
-  // Handle the custom event and call the function from gcp marker
-  private handleTriggerFunction() {
-    const gcpMarker = this.shadowRoot?.querySelector('gcp-marker') as GcpMarker;
-    if (gcpMarker) {
-      gcpMarker.loadImage();
-    }
+  connectedCallback() {
+    super.connectedCallback();
+    // Listen for updates to CSV data
+    document.addEventListener(Store.GCP_DATA_UPDATE, this.handleGcpDataUpdate.bind(this));
+    document.addEventListener(Store.GCP_DATA_WITH_IMAGE_XY_UPDATE, this.handleGcpDataWithXYUpdate.bind(this));
+  }
+
+  disconnectedCallback() {
+    document.removeEventListener(Store.GCP_DATA_UPDATE, this.handleGcpDataUpdate.bind(this));
+    document.removeEventListener(Store.GCP_DATA_WITH_IMAGE_XY_UPDATE, this.handleGcpDataWithXYUpdate.bind(this));
+    super.disconnectedCallback();
+  }
+
+  handleGcpDataUpdate(event: Event) {
+    const CustomEvent = event as CustomEvent<any>;
+    this.gcpData = CustomEvent?.detail;
+  }
+
+  handleGcpDataWithXYUpdate(event: Event) {
+    const CustomEvent = event as CustomEvent<any>;
+    this.setGcpDataWithXY = CustomEvent?.detail;
+  }
+
+  private handleClickBack() {
+    this.activeStep = this.activeStep - 1;
+  }
+
+  private handleClickNext() {
+    if (this.activeStep === 1 && !this.gcpData) return;
+    if (this.activeStep === 2 && !Object.keys(this.setGcpDataWithXY || {}).length) return;
+    this.activeStep = this.activeStep + 1;
   }
 
   render() {
     return html`
-      <div class="wrapper">
-        <div class="input-section">
-          <div class="main-input-wrapper">
-            <div>
-              <cog-url-input></cog-url-input>
-            </div>
-            <div>
-              <projection-input></projection-input>
-              <load-btn @load-COG="${this.handleTriggerFunction}"></load-btn>
-            </div>
-
-            <csv-upload></csv-upload>
-          </div>
-          <csv-preview></csv-preview>
+      <div class="tw-h-full tw-w-full tw-pb-28">
+        <div class="tw-px-20 tw-py-10 tw-h-full tw-w-full tw-border-b">
+          ${this.activeStep === 1
+            ? html`
+                <gcp-data-input></gcp-data-input>
+              `
+            : this.activeStep === 2
+            ? html`
+                <gcp-marking></gcp-marking>
+              `
+            : html`
+                <gcp-result></gcp-result>
+              `}
         </div>
-        <div class="map-section">
-          <gcp-marker></gcp-marker>
+
+        <div class="tw-flex tw-justify-between tw-w-full tw-fixed tw-bottom-10 tw-px-20">
+          ${this.activeStep > 1
+            ? html`
+                <hot-button @click=${this.handleClickBack}>Back</hot-button>
+              `
+            : html`
+                <div></div>
+              `}
+          <hot-button @click=${this.handleClickNext}>Next</hot-button>
         </div>
       </div>
     `;
