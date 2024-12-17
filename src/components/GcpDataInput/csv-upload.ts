@@ -43,7 +43,7 @@ export class CsvUpload extends LitElement {
           <div class="tw-flex tw-flex-col tw-items-center tw-justify-center">
             <span class="material-symbols-outlined tw-text-primary">cloud_upload</span>
             <span class="tw-text tw-font-light">
-              ${this.gcpFile ? this?.gcpFile?.name : 'The Supported file format is .csv'}
+              ${this.gcpFile ? this?.gcpFile?.name : 'Please upload a .csv file'}
             </span>
           </div>
         </label>

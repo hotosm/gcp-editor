@@ -84,7 +84,7 @@ export class RawImageUpload extends LitElement {
             />
             <div class="tw-flex tw-flex-col tw-items-center tw-justify-center">
               <span class="material-symbols-outlined tw-text-primary">cloud_upload</span>
-              <span class="tw-text tw-font-light">The Supported file format is .jpg</span>
+              <span class="tw-text tw-font-light">Please upload an image file (.jpg, .tiff, .png)</span>
             </div>
           </label>
         </div>
@@ -103,7 +103,7 @@ export class RawImageUpload extends LitElement {
           )}
         </div>
         <div class="tw-flex tw-justify-center tw-w-full tw-absolute tw-bottom-4" @click=${() => this.updateGcpData()}>
-          <hot-button>save changes</hot-button>
+          <hot-button>Save Changes</hot-button>
         </div>
       </div>
     `;

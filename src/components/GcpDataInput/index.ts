@@ -20,7 +20,7 @@ export class GcpDataInput extends LitElement {
     return html`
       <div class="tw-grid tw-grid-cols-2 tw-gap-10">
         <div class="tw-flex tw-flex-col tw-gap-5">
-          <hot-input placeholder="Cog URL" @input=${(e: Event) => this.handleInputChange(e)}></hot-input>
+          <hot-input placeholder="Input a COG URL" @input=${(e: Event) => this.handleInputChange(e)}></hot-input>
           <csv-upload></csv-upload>
         </div>
         <div class="tw-bg-gray-300 tw-w-full tw-h-full tw-p-5 tw-min-h-80">Information about csv format</div>

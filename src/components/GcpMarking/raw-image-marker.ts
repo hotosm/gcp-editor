@@ -129,6 +129,7 @@ export class RawImageMarker extends LitElement {
 
   render() {
     return html`
+      <div>Double Click To Mark The Actual GCP Location</div>
       <div class="image-with-outer-wrapper">
         <div
           id="label-${this.index}"
