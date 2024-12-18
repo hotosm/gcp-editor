@@ -1,0 +1,14 @@
+{
+    "name": "gcp-editor-demo",
+    "version": "0.0.0",
+    "scripts": {
+      "dev": "pnpm install && vite --host 0.0.0.0 --port 3000",
+      "preview": "pnpm install && vite preview"
+    },
+    "dependencies": {
+      "@hotosm/gcp-editor": "file:.."
+    },
+    "devDependencies": {
+      "vite": "^5.4.10"
+    }
+}
