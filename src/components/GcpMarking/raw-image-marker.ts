@@ -1,7 +1,6 @@
 import { html, LitElement, PropertyValues } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import gcpMarkerIcon from '../../assets/gcpMarker.png';
-import '../../styles/index.css';
+import gcpMarkerIcon from '../../assets/gcpMarker.png'
 import panzoom from '@panzoom/panzoom';
 
 @customElement('raw-image-marker')
