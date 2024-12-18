@@ -1,0 +1,37 @@
+name: 🚀 Publish to npmjs.org
+
+on:
+  release:
+    types: [published]
+  # Allow manual trigger (workflow_dispatch)
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: "pnpm"
+          cache-dependency-path: "pnpm-lock.yaml"
+          registry-url: https://registry.npmjs.org
+
+      - name: Install dependencies
+        working-directory: .
+        run: CI=true pnpm install
+
+      - name: Publish
+        working-directory: .
+        run: pnpm publish --access=public --no-git-checks
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
