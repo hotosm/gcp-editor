@@ -20,15 +20,15 @@
   with the best projection support.
 - We may also need to use [geotiff.js](https://github.com/geotiffjs/geotiff.js)
   for low level calculations / math to achieve what we need.
-- An example using both can be found at https://github.com/geotiffjs/cog-explorer
+- An example using both can be found at <https://github.com/geotiffjs/cog-explorer>
 
 > Note that MapLibre has a new
-> [COG protocol extension](https://github.com/geomatico/maplibre-cog-protocol), 
+> [COG protocol extension](https://github.com/geomatico/maplibre-cog-protocol),
 > but this only supports EPSG:3857 images and we do not wish to introduce
 > that inaccuracy when dealing with precise GCP.
 
 Related forum post that will influence our decisions here:
-https://community.opendronemap.org/t/passing-different-output-projections-to-odm-eg-a-proj-flag/22460
+<https://community.opendronemap.org/t/passing-different-output-projections-to-odm-eg-a-proj-flag/22460>
 
 ## Final Step
 
