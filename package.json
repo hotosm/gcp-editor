@@ -49,7 +49,6 @@
     "@openlayers-elements/core": "^0.4.0",
     "@openlayers-elements/maps": "^0.4.0",
     "@panzoom/panzoom": "^4.5.1",
-    "@shoelace-style/shoelace": "^2.19.0",
     "lit": "^3.2.1"
   },
   "devDependencies": {
