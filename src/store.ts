@@ -11,7 +11,7 @@ export class Store {
   //   event for data update
   static readonly GCP_DATA_UPDATE = 'gcp-data-update';
   static readonly COG_URL_UPDATE = 'cog-url-update';
-  static readonly PROJECTION_UPDATE = 'cog-url-update';
+  static readonly PROJECTION_UPDATE = 'projection-url-update';
   static readonly ACTIVE_STEP_UPDATE = 'active-step-update';
   static readonly GCP_POINTS_GEOJSON = 'gcp-points-geojson';
   static readonly SELECTED_GCP_DETAILS_UPDATE = 'selected-gcp-details-update';
