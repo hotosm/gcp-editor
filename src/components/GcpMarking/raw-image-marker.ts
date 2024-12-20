@@ -5,7 +5,8 @@ import panzoom from '@panzoom/panzoom';
 
 @customElement('raw-image-marker')
 export class RawImageMarker extends LitElement {
-  @property() image: any = null;
+  @property() imageName: any = null;
+  @property() imageUrl = '';
   @property() index: any = null;
   @property() gcpMarkerHandler: any;
   @property() selectedGcpDetails: any;
@@ -18,7 +19,7 @@ export class RawImageMarker extends LitElement {
   }
 
   protected firstUpdated(_changedProperties: PropertyValues): void {
-    this.initializePanzoom(this.index, this.image.name, this.mark);
+    this.initializePanzoom(this.index, this.imageName, this.mark);
     this._hasRenderedMark = true;
   }
 
@@ -37,7 +38,7 @@ export class RawImageMarker extends LitElement {
     const imageLabel = this.querySelector(`#label-${imageIndex}`) as HTMLElement;
 
     const img = new Image();
-    img.src = URL.createObjectURL(this.image);
+    img.src = this.imageUrl;
     img.onload = () => {
       const width = img.naturalWidth;
       const height = img.naturalHeight;
@@ -136,13 +137,13 @@ export class RawImageMarker extends LitElement {
             ? 'tw-bg-primary'
             : 'tw-bg-gray-400'} tw-flex tw-items-center tw-px-1 tw-line-clamp-1 tw-text-[#fff]"
         >
-          ${this.image.name}
+          ${this.imageName}
         </div>
         <div class="outer">
           <div
             class="image-container"
             id="panzoom-container-${this.index}"
-            style="background-image: url(${URL.createObjectURL(this.image)})"
+            style="background-image: url(${this.imageUrl})"
           >
             <!-- Marker inside the image -->
             <img id="marker-${this.index}" src=${gcpMarkerIcon} style="display: none" />
