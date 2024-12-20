@@ -17,8 +17,8 @@ export class GcpDataInput extends LitElement {
   };
 
   handleProjectionInputChange = (event: any) => {
-    this.projection = event.target.value;
-    Store.setProjection(this.projection || 'EPSG:4326');
+    this.projection = event.target.value || 'EPSG:4326';
+    Store.setProjection(this.projection);
   };
 
   render() {
