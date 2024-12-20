@@ -14,7 +14,6 @@ export class GcpEditor extends LitElement {
   @property({ type: Number }) activeStep = 1;
   @property() gcpData = null;
   @property() setGcpDataWithXY = {};
-  @property({ type: String }) projection: string = Store.getProjection();
 
   createRenderRoot() {
     // Return `this` instead of a shadow root, meaning no Shadow DOM is used
@@ -26,13 +25,11 @@ export class GcpEditor extends LitElement {
     // Listen for updates to CSV data
     document.addEventListener(Store.GCP_DATA_UPDATE, this.handleGcpDataUpdate.bind(this));
     document.addEventListener(Store.GCP_DATA_WITH_IMAGE_XY_UPDATE, this.handleGcpDataWithXYUpdate.bind(this));
-    document.addEventListener(Store.PROJECTION_UPDATE, this.handleProjectionUpdate.bind(this));
   }
 
   disconnectedCallback() {
     document.removeEventListener(Store.GCP_DATA_UPDATE, this.handleGcpDataUpdate.bind(this));
     document.removeEventListener(Store.GCP_DATA_WITH_IMAGE_XY_UPDATE, this.handleGcpDataWithXYUpdate.bind(this));
-    document.removeEventListener(Store.PROJECTION_UPDATE, this.handleProjectionUpdate.bind(this));
     super.disconnectedCallback();
   }
 
@@ -46,17 +43,13 @@ export class GcpEditor extends LitElement {
     this.setGcpDataWithXY = CustomEvent?.detail;
   }
 
-  handleProjectionUpdate(event: Event) {
-    const CustomEvent = event as CustomEvent<any>;
-    this.projection = CustomEvent?.detail;
-  }
-
   private handleClickBack() {
     this.activeStep = this.activeStep - 1;
   }
 
   private handleClickNext() {
-    if ((this.activeStep === 1 && !this.gcpData) || (this.projection && !get(this.projection))) return;
+    const projection = Store.getProjection();
+    if (this.activeStep === 1 && (!this.gcpData || !get(projection))) return;
     if (this.activeStep === 2 && !Object.keys(this.setGcpDataWithXY || {}).length) return;
     this.activeStep = this.activeStep + 1;
   }
