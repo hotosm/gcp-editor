@@ -14,7 +14,7 @@ type GcpFile = Array<GcpHeaders | GcpRow>;
 
 /**
  * GcpResult Component
- * 
+ *
  * This component renders a list of Ground Control Points (GCP) as a table
  * and provides functionality to download the data in a custom text format.
  */
@@ -102,27 +102,26 @@ export class GcpResult extends LitElement {
   private convertToArray(data: any): GcpFile {
     const result: GcpFile = [];
     const headers: GcpHeaders = ['X', 'Y', 'Z', 'Image X', 'Image Y', 'File Name'];
-  
     // Add headers (these are removed on download, but there for information only)
     result.push(headers);
-  
+
     for (const group in data) {
       for (const fileName in data[group]) {
         const entry = data[group][fileName];
         result.push([
-          entry.X,          // X
-          entry.Y,          // Y
-          entry.Z,          // Z
-          entry.imageX,     // Image X
-          entry.imageY,     // Image Y
-          entry.fileName    // File Name
+          entry.X, // X
+          entry.Y, // Y
+          entry.Z, // Z
+          entry.imageX, // Image X
+          entry.imageY, // Image Y
+          entry.fileName, // File Name
         ]);
       }
     }
-  
+
     return result;
   }
-   
+
   /**
    * Handles the GCP file download functionality.
    * Generates a space-separated text file in a custom format and triggers its download.
@@ -139,7 +138,7 @@ export class GcpResult extends LitElement {
       .slice(1) // Skip headers
       .map((row) => `${row[0]} ${row[1]} ${row[2]} ${row[3]} ${row[4]} ${row[5]}`) // Format: X Y Z ImageX ImageY FileName
       .join('\n');
-    
+
     const finalContent = header + rows;
 
     // Create a Blob for the file and trigger download
@@ -162,26 +161,31 @@ export class GcpResult extends LitElement {
     return html`
       <div class="table-wrapper">
         <table>
-        <thead>
-          <tr>
-            ${(this.gcpInCsv?.[0] as GcpHeaders)?.map(
-              (header: string) =>
-                typeof header === 'string' ? html`<th>${header}</th>` : null
-            )}
-          </tr>
-        </thead>
-          <tbody>
-            ${this.gcpInCsv.slice(1).map(
-              (row: GcpRow | GcpHeaders) =>
-                Array.isArray(row) && typeof row[0] === 'number'
+          <thead>
+            <tr>
+              ${(this.gcpInCsv?.[0] as GcpHeaders)?.map((header: string) =>
+                typeof header === 'string'
                   ? html`
-                      <tr>
-                        ${row.map(
-                          (cell: string | number) => html`<td>${cell}</td>`
-                        )}
-                      </tr>
+                      <th>${header}</th>
                     `
                   : null
+              )}
+            </tr>
+          </thead>
+          <tbody>
+            ${this.gcpInCsv.slice(1).map((row: GcpRow | GcpHeaders) =>
+              Array.isArray(row) && typeof row[0] === 'number'
+                ? html`
+                    <tr>
+                      ${row.map(
+                        (cell: string | number) =>
+                          html`
+                            <td>${cell}</td>
+                          `
+                      )}
+                    </tr>
+                  `
+                : null
             )}
           </tbody>
         </table>
