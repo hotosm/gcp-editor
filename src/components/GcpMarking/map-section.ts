@@ -17,6 +17,7 @@ import { Store } from '../../store';
 export class MapSection extends LitElement {
   @property({ type: Object }) gcpPointGeojson: String[][] = Store.getGcpGeojson();
   @property({ type: Object }) cogUrl: string = Store.getCogUrl();
+  @property({ type: String }) projection: string = Store.getProjection();
 
   private map!: OlMapInstance;
 
@@ -38,6 +39,7 @@ export class MapSection extends LitElement {
   firstUpdated(): void {
     const mapEl: OlMap = this.renderRoot.querySelector('ol-map#gcp-map')!;
     this.gcpPointGeojson = Store.getGcpGeojson();
+    this.projection = Store.getProjection();
 
     mapEl?.updateComplete?.then(() => {
       this.map = mapEl.map!;
@@ -82,6 +84,7 @@ export class MapSection extends LitElement {
     const gcpPointSource = new VectorSource({
       features: new GeoJSON().readFeatures(geojson, {
         featureProjection: 'EPSG:3857', // Projection for OpenLayers map
+        dataProjection: this.projection,
       }),
     });
 
