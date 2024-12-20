@@ -1,7 +1,7 @@
 export class Store {
   private static _gcpData: string[][] = [];
+  private static _projection: string = 'EPSG:4326';
   private static _cogUrl: string = '';
-  private static _projection: string = '';
   private static _activeStep: number = 1;
   private static _gcpPointsGeoJson: Object | null = null;
   private static _selectedGcpDetails: any = null;

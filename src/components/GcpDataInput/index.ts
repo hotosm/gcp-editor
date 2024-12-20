@@ -1,11 +1,11 @@
 import { html, LitElement } from 'lit';
-import { customElement } from 'lit/decorators.js';
+import { customElement, property } from 'lit/decorators.js';
 import './csv-upload';
 import { Store } from '../../store';
 
 @customElement('gcp-data-input')
 export class GcpDataInput extends LitElement {
-  // 'https://dev-dronetm.s3.ap-south-1.amazonaws.com/dtm-data/projects/1a7b9417-aa42-43d0-b3a8-8d7a971ddc8e/cde82416-46e3-4fbb-b92d-e4c56430f499/orthophoto/odm_orthophoto.tif';
+  @property({ type: String }) projection: string = Store.getProjection();
 
   createRenderRoot() {
     // Return `this` instead of a shadow root, meaning no Shadow DOM is used
@@ -16,10 +16,20 @@ export class GcpDataInput extends LitElement {
     Store.setCogUrl(event.target.value || '');
   };
 
+  handleProjectionInputChange = (event: any) => {
+    this.projection = event.target.value;
+    Store.setProjection(this.projection || 'EPSG:4326');
+  };
+
   render() {
     return html`
       <div class="tw-grid tw-grid-cols-2 tw-gap-10">
         <div class="tw-flex tw-flex-col tw-gap-5">
+          <hot-input
+            placeholder="ESPG:4326"
+            @input=${(e: Event) => this.handleProjectionInputChange(e)}
+            value=${this.projection}
+          ></hot-input>
           <hot-input placeholder="Input a COG URL" @input=${(e: Event) => this.handleInputChange(e)}></hot-input>
           <csv-upload></csv-upload>
         </div>
