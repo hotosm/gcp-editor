@@ -12,28 +12,23 @@ export class GcpDataInput extends LitElement {
     return this;
   }
 
-  handleInputChange = (event: any) => {
-    Store.setCogUrl(event.target.value || '');
-  };
-
-  handleProjectionInputChange = (event: any) => {
-    this.projection = event.target.value || 'EPSG:4326';
-    Store.setProjection(this.projection);
-  };
+  handleNextClick() {
+    Store.setActiveStep(2);
+  }
 
   render() {
     return html`
-      <div class="tw-grid tw-grid-cols-2 tw-gap-10">
-        <div class="tw-flex tw-flex-col tw-gap-5">
-          <hot-input
-            placeholder="ESPG:4326"
-            @input=${(e: Event) => this.handleProjectionInputChange(e)}
-            value=${this.projection}
-          ></hot-input>
-          <hot-input placeholder="Input a COG URL" @input=${(e: Event) => this.handleInputChange(e)}></hot-input>
-          <csv-upload></csv-upload>
+      <div class="tw-grid tw-grid-cols-3 tw-gap-10 tw-h-full tw-w-full">
+        <div class="tw-bg-[#fff] tw-w-full tw-h-full tw-p-5 tw-min-h-80 tw-col-span-1 tw-rounded-xl">
+          Information about csv format
         </div>
-        <div class="tw-bg-gray-300 tw-w-full tw-h-full tw-p-5 tw-min-h-80">Information about csv format</div>
+
+        <div class="tw-flex tw-flex-col tw-gap-5 tw-col-span-2 tw-bg-[#fff] tw-p-5 tw-rounded-xl tw-relative">
+          <csv-upload></csv-upload>
+          <div class="tw-absolute tw-bottom-4 tw-right-10">
+            <hot-button @click=${() => this.handleNextClick()}>Next</hot-button>
+          </div>
+        </div>
       </div>
     `;
   }
