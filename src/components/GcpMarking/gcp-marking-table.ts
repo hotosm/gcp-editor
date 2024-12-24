@@ -1,6 +1,7 @@
 import { css, html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { Store } from '../../store';
+import uploadImage from '../../assets/uploadIcon.png';
 
 @customElement('gcp-marking-table')
 export class GcpMarkingTable extends LitElement {
@@ -50,11 +51,6 @@ export class GcpMarkingTable extends LitElement {
       font-weight: bold;
     }
 
-    tr:hover {
-      background-color: #ffeded;
-      cursor: pointer;
-    }
-
     td {
       color: #555;
     }
@@ -68,12 +64,20 @@ export class GcpMarkingTable extends LitElement {
     th:first-child {
       border-left: none;
     }
-    .image-count {
-      margin-left: 10px;
-      padding: 4px 8px;
-      background: green;
-      border-radius: 12px;
-      color: white;
+    .upload-wrapper {
+      display: flex;
+      gap: 10px;
+      cursor: pointer;
+    }
+
+    .upload-wrapper:hover {
+      text-decoration: underline;
+      text-decoration-color: red;
+    }
+
+    .upload-wrapper > span {
+      color: red;
+      font-weight: 600;
     }
   `;
 
@@ -89,8 +93,7 @@ export class GcpMarkingTable extends LitElement {
   getMarkedImageCount = (gcpLabel: any) => {
     if (!gcpLabel || !this.gcpDataWithImageXY || !Object.keys(this.gcpDataWithImageXY || {}).length) return 0;
     const count = Object.keys(this.gcpDataWithImageXY?.[gcpLabel] || {}).length;
-
-    return count ? `${count} image${count > 1 ? 's' : ''} marked` : 0;
+    return count || 0;
   };
 
   protected render() {
@@ -98,20 +101,24 @@ export class GcpMarkingTable extends LitElement {
       <table>
         <thead>
           <tr>
-            <th>Ground Control Point</th>
+            <th>Label</th>
+            <th>Marked image count</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
           ${this.gcpData.slice(1).map(
             (row: Array<String>) => html`
-              <tr @click=${() => this.handleGcpDataSelection(row)}>
+              <tr>
                 <td>
                   <span>${row[0]}</span>
-                  ${this.getMarkedImageCount(row[0])
-                    ? html`
-                        <span class="image-count">${this.getMarkedImageCount(row[0])}</span>
-                      `
-                    : null}
+                </td>
+                <td>${this.getMarkedImageCount(row[0])}</td>
+                <td>
+                  <div class="upload-wrapper" @click=${() => this.handleGcpDataSelection(row)}>
+                    <img src=${uploadImage} />
+                    <span>Image</span>
+                  </div>
                 </td>
               </tr>
             `
