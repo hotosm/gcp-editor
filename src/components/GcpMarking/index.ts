@@ -31,6 +31,14 @@ export class GcpMarking extends LitElement {
     this.selectedGcpDetails = CustomEvent.detail;
   }
 
+  private handleNextClick() {
+    Store.setActiveStep(3);
+  }
+
+  private handlePreviousClick() {
+    Store.setActiveStep(1);
+  }
+
   protected render() {
     return html`
       <div class="tw-grid tw-grid-cols-5 tw-gap-10 tw-h-full tw-w-full tw-bg-[#fff] tw-p-5 tw-rounded-xl">
@@ -39,8 +47,8 @@ export class GcpMarking extends LitElement {
             <gcp-marking-table></gcp-marking-table>
           </div>
           <div class="tw-h-fit tw-py-5 tw-flex tw-justify-between">
-            <hot-button>Previous</hot-button>
-            <hot-button>Next</hot-button>
+            <hot-button @click=${() => this.handlePreviousClick()}>Previous</hot-button>
+            <hot-button @click=${() => this.handleNextClick()}>Next</hot-button>
           </div>
         </div>
         <div class="tw-col-span-3"><map-section></map-section></div>
