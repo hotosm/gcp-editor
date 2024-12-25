@@ -3,7 +3,7 @@ import { customElement, property } from 'lit/decorators.js';
 import './map-section';
 import './gcp-marking-table';
 import { Store } from '../../store';
-import './raw-image-upload';
+import './raw-image-listing-modal';
 
 @customElement('gcp-marking')
 export class GcpMarking extends LitElement {
@@ -19,14 +19,10 @@ export class GcpMarking extends LitElement {
   connectedCallback() {
     super.connectedCallback();
     document.addEventListener(Store.SELECTED_GCP_DETAILS_UPDATE, this.handleSelectedGcpDetailsUpdate.bind(this));
-    document.addEventListener(Store.IMAGE_LIST_UPDATE, this.imageListUpdate.bind(this));
-    document.addEventListener(Store.GCP_DATA_WITH_IMAGE_XY_UPDATE, this.gcpXYUpdate.bind(this));
   }
 
   disconnectedCallback() {
     document.removeEventListener(Store.SELECTED_GCP_DETAILS_UPDATE, this.handleSelectedGcpDetailsUpdate.bind(this));
-    document.removeEventListener(Store.IMAGE_LIST_UPDATE, this.imageListUpdate.bind(this));
-    document.removeEventListener(Store.GCP_DATA_WITH_IMAGE_XY_UPDATE, this.gcpXYUpdate.bind(this));
     super.disconnectedCallback();
   }
 
@@ -34,31 +30,18 @@ export class GcpMarking extends LitElement {
     const CustomEvent = event as CustomEvent<any>;
     this.selectedGcpDetails = CustomEvent.detail;
   }
-  private imageListUpdate(event: Event) {
-    const CustomEvent = event as CustomEvent<any>;
-    this.imageList = CustomEvent.detail;
-  }
-  private gcpXYUpdate(event: Event) {
-    const CustomEvent = event as CustomEvent<any>;
-    this.gcpDataWithXY = CustomEvent.detail;
-  }
-
-  private handleSaveChanges(markerData: { images: File[]; markings: any; gcpLabel: string | number }) {
-    // if (markerData?.images?.length) {
-    // Store.setImageList({ ...this.imageList, [markerData.gcpLabel]: markerData?.images });
-    Store.setImageList(markerData.images);
-
-    // }
-    if (Object.keys(markerData.markings || {}).length) {
-      Store.setGcpDataWithXY(markerData.markings);
-    }
-  }
 
   protected render() {
     return html`
-      <div class="tw-grid tw-grid-cols-5 tw-gap-10">
-        <div class="tw-col-span-2">
-          <gcp-marking-table></gcp-marking-table>
+      <div class="tw-grid tw-grid-cols-5 tw-gap-10 tw-h-full tw-w-full tw-bg-[#fff] tw-p-5 tw-rounded-xl">
+        <div class="tw-col-span-2 tw-h-full tw-flex tw-flex-col">
+          <div class="flex tw-flex-grow">
+            <gcp-marking-table></gcp-marking-table>
+          </div>
+          <div class="tw-h-fit tw-py-5 tw-flex tw-justify-between">
+            <hot-button>Previous</hot-button>
+            <hot-button>Next</hot-button>
+          </div>
         </div>
         <div class="tw-col-span-3"><map-section></map-section></div>
       </div>
@@ -71,12 +54,7 @@ export class GcpMarking extends LitElement {
               style="--width: 92vw;"
             >
               <div id="image-uploading-content">
-                <raw-image-upload
-                  .selectedGcpDetails=${this.selectedGcpDetails}
-                  .imageList=${this.imageList}
-                  .gcpList=${this.gcpDataWithXY}
-                  .handleSaveChanges=${this.handleSaveChanges}
-                ></raw-image-upload>
+                <raw-image-listing-modal></raw-image-listing-modal>
               </div>
             </hot-dialog>
           `
