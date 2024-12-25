@@ -28,7 +28,7 @@ export class MapSection extends LitElement {
     }
     #map-container {
       display: flex;
-      height: 80vh;
+      height: 87vh;
       width: 100%;
       border-radius: 8px;
       overflow: hidden;
