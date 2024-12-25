@@ -56,6 +56,14 @@ export class CsvPreview extends LitElement {
       border-bottom: 1px solid #ddd;
     }
 
+    table th:first-child {
+      border-radius: 10px 0 0 0;
+    }
+
+    table th:last-child {
+      border-radius: 0 10px 0 0;
+    }
+
     th {
       background-color: #f73f3f;
       color: white;
