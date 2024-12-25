@@ -51,6 +51,14 @@ export class GcpMarkingTable extends LitElement {
       font-weight: bold;
     }
 
+    table th:first-child {
+      border-radius: 10px 0 0 0;
+    }
+
+    table th:last-child {
+      border-radius: 0 10px 0 0;
+    }
+
     td {
       color: #555;
     }
