@@ -1,5 +1,5 @@
 import { css, html, LitElement } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { customElement, property, state } from 'lit/decorators.js';
 import { Store } from '../../store';
 import uploadImage from '../../assets/uploadIcon.png';
 
@@ -7,15 +7,18 @@ import uploadImage from '../../assets/uploadIcon.png';
 export class GcpMarkingTable extends LitElement {
   @property({ type: Object }) gcpData: String[][] = Store.getGcpData();
   @property() gcpDataWithImageXY: any = Store.getGcpDataWithXY() || {};
+  @state() activeGcp: any = Store.getActiveGcp();
 
   connectedCallback() {
     super.connectedCallback();
     // Listen for updates to CSV data
-    document.addEventListener(Store.GCP_DATA_WITH_IMAGE_XY_UPDATE, this.privateHandleGcpUpdate.bind(this));
+    document.addEventListener(Store.GCP_DATA_WITH_IMAGE_XY_UPDATE, this.handleGcpUpdate.bind(this));
+    document.addEventListener(Store.ACTIVE_GCP_UPDATE, this.handleActiveGcpUpdate.bind(this));
   }
 
   disconnectedCallback() {
-    document.removeEventListener(Store.GCP_DATA_WITH_IMAGE_XY_UPDATE, this.privateHandleGcpUpdate.bind(this));
+    document.removeEventListener(Store.GCP_DATA_WITH_IMAGE_XY_UPDATE, this.handleGcpUpdate.bind(this));
+    document.removeEventListener(Store.ACTIVE_GCP_UPDATE, this.handleActiveGcpUpdate.bind(this));
     super.disconnectedCallback();
   }
 
@@ -87,16 +90,29 @@ export class GcpMarkingTable extends LitElement {
       color: red;
       font-weight: 600;
     }
+    tr:hover {
+      background: #f9d3d3;
+      cursor: pointer;
+    }
+
+    .active {
+      background: #f9d3d3;
+    }
   `;
 
   private handleGcpDataSelection(rowdata: any) {
     Store.setSelectedGcpDetails(rowdata);
   }
 
-  private privateHandleGcpUpdate = (event: Event) => {
+  private handleGcpUpdate = (event: Event) => {
     const CustomEvent = event as CustomEvent<any>;
     this.gcpDataWithImageXY = CustomEvent.detail;
   };
+
+  private handleActiveGcpUpdate(event: Event) {
+    const CustomEvent = event as CustomEvent<any>;
+    this.activeGcp = CustomEvent.detail;
+  }
 
   getMarkedImageCount = (gcpLabel: any) => {
     if (!gcpLabel || !this.gcpDataWithImageXY || !Object.keys(this.gcpDataWithImageXY || {}).length) return 0;
@@ -117,7 +133,7 @@ export class GcpMarkingTable extends LitElement {
         <tbody>
           ${this.gcpData.slice(1).map(
             (row: Array<String>) => html`
-              <tr>
+              <tr class=${this.activeGcp?.[0] === row?.[0] ? 'active' : ''} @click=${() => Store.setActiveGcp(row)}>
                 <td>
                   <span>${row[0]}</span>
                 </td>
