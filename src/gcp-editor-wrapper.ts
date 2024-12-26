@@ -11,6 +11,7 @@ import './components/GcpResult/index';
 @customElement('gcp-editor')
 export class GcpEditor extends LitElement {
   @property({ type: String }) rawImageUrl = '';
+  @property({ type: String }) cogUrl = '';
   @property({ type: Number }) activeStep = 1;
   @property() gcpData = null;
   @property() setGcpDataWithXY = {};
@@ -23,6 +24,7 @@ export class GcpEditor extends LitElement {
   connectedCallback() {
     super.connectedCallback();
     Store.setRawImageUrl(this.rawImageUrl);
+    Store.setCogUrl(this.cogUrl);
     // Listen for updates to CSV data
     document.addEventListener(Store.GCP_DATA_UPDATE, this.handleGcpDataUpdate.bind(this));
     document.addEventListener(Store.GCP_DATA_WITH_IMAGE_XY_UPDATE, this.handleGcpDataWithXYUpdate.bind(this));
