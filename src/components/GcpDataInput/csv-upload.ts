@@ -1,5 +1,5 @@
 import { html, LitElement } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { customElement, property, state } from 'lit/decorators.js';
 import { parseCSVFile } from '../../utils/csvparser';
 import { Store } from '../../store';
 import './csv-preview';
@@ -7,6 +7,7 @@ import './csv-preview';
 @customElement('csv-upload')
 export class CsvUpload extends LitElement {
   @property({ type: Object }) gcpFile: File | null = null;
+  @state() errorMessage: string = '';
   createRenderRoot() {
     // Return `this` instead of a shadow root, meaning no Shadow DOM is used
     return this;
@@ -19,7 +20,17 @@ export class CsvUpload extends LitElement {
       this.gcpFile = file;
       parseCSVFile(file)
         .then((data) => {
+          console.log(data, 'data');
+          if (data.length < 2) {
+            this.errorMessage = 'Csv has no data row';
+            return;
+          }
+          if (data[0].length > 4) {
+            this.errorMessage = `Csv ${data[0]?.length} columns expected 4 columns`;
+            return;
+          }
           Store.setGcpData(data);
+          this.errorMessage = '';
         })
         .catch((error) => {
           console.error(error);
@@ -49,7 +60,13 @@ export class CsvUpload extends LitElement {
         </label>
       </div>
       <div>
-        <csv-preview></csv-preview>
+        ${this.errorMessage
+          ? html`
+              <div class="tw-py-3 tw-text-primary">${this.errorMessage}</div>
+            `
+          : html`
+              <csv-preview></csv-preview>
+            `}
       </div>
     `;
   }
