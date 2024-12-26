@@ -35,7 +35,7 @@ export class GcpResult extends LitElement {
   static styles = css`
     :host {
       display: flex;
-      flex-direction:column;
+      flex-direction: column;
       justify-content: space-between;
       background: white;
       height: 100%;
@@ -44,7 +44,7 @@ export class GcpResult extends LitElement {
     }
     /* Wrapper for the table */
     .table-wrapper {
-      width:100%
+      width: 100%;
       overflow-x: auto; /* Enable horizontal scrolling when the table overflows */
       -webkit-overflow-scrolling: touch; /* Smooth scrolling for mobile devices */
       margin: 20px;
@@ -56,12 +56,12 @@ export class GcpResult extends LitElement {
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }
 
-    table th:first-child{
-      border-radius:10px 0 0 0;
+    table th:first-child {
+      border-radius: 10px 0 0 0;
     }
 
-    table th:last-child{
-      border-radius:0 10px 0 0;
+    table th:last-child {
+      border-radius: 0 10px 0 0;
     }
 
     th,
@@ -96,13 +96,13 @@ export class GcpResult extends LitElement {
     th:first-child {
       border-left: none;
     }
-    .button-wrapper{
-      width:100%;
+    .button-wrapper {
+      width: 100%;
       padding: 20px 20px;
       display: flex;
       justify-content: center;
       justify-items: center;
-      gap:10px;
+      gap: 10px;
     }
   `;
 
@@ -202,7 +202,7 @@ export class GcpResult extends LitElement {
           </thead>
           <tbody>
             ${this.gcpInCsv.slice(1).map((row: GcpRow | GcpHeaders) =>
-              Array.isArray(row) && typeof row[0] === 'number'
+              Array.isArray(row) && !Number.isNaN(row[0])
                 ? html`
                     <tr>
                       ${row.map(
