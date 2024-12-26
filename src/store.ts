@@ -1,5 +1,13 @@
 export class Store {
   private static _gcpData: string[][] = [];
+  // private static _gcpData: string[][] = [
+  //   ['GCP Label', 'X', 'Y', 'Z'],
+  //   ['gcp1', '27.73065137604506', '85.32836730666855', '4'],
+  //   ['gcp2', '27.73045756388116', '85.3287221286364', '4'],
+  //   ['gcp3', '27.730362992761272', '85.32901759376955', '4'],
+  //   ['gcp4', '27.730514773531667', '85.32826574052751', '4'],
+  //   ['gcp5', '27.73031371146446', '85.32852511222671', '4'],
+  // ];
   private static _projection: string = 'EPSG:4326';
   private static _cogUrl: string = '';
   private static _activeStep: number = 1;
@@ -7,6 +15,8 @@ export class Store {
   private static _selectedGcpDetails: any = null;
   private static _gcpDataWithImageXY: any = {};
   private static _imageList = {};
+  private static _rawImageUrl = '';
+  private static _activeGcp = []; // it is only simulate  map and table gcp
 
   //   event for data update
   static readonly GCP_DATA_UPDATE = 'gcp-data-update';
@@ -16,6 +26,8 @@ export class Store {
   static readonly GCP_POINTS_GEOJSON = 'gcp-points-geojson';
   static readonly SELECTED_GCP_DETAILS_UPDATE = 'selected-gcp-details-update';
   static readonly GCP_DATA_WITH_IMAGE_XY_UPDATE = 'final-gcp-data-with-xy-update';
+  static readonly IMAGE_URL_UPDATE = 'image-url-update';
+  static readonly ACTIVE_GCP_UPDATE = 'active-gcp-update';
 
   // ***
   static readonly IMAGE_LIST_UPDATE = 'image-list-update';
@@ -91,5 +103,23 @@ export class Store {
   static setImageList(data: any) {
     this._imageList = data;
     document.dispatchEvent(new CustomEvent(Store.IMAGE_LIST_UPDATE, { detail: data }));
+  }
+
+  static getRawImageUrl(): any {
+    return this._rawImageUrl;
+  }
+
+  static setRawImageUrl(data: any) {
+    this._rawImageUrl = data;
+    document.dispatchEvent(new CustomEvent(Store.IMAGE_URL_UPDATE, { detail: data }));
+  }
+
+  static getActiveGcp(): any {
+    return this._activeGcp;
+  }
+
+  static setActiveGcp(data: any) {
+    this._activeGcp = data;
+    document.dispatchEvent(new CustomEvent(Store.ACTIVE_GCP_UPDATE, { detail: data }));
   }
 }
