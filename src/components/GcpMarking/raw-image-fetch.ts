@@ -46,8 +46,8 @@ export class RawImageFetch extends LitElement {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          longitude: 85.328644727626,
-          latitude: 27.7303180403227,
+          longitude: this.selectedGcpDetails[2],
+          latitude: this.selectedGcpDetails[1],
         }),
       });
       if (!response.ok) {
