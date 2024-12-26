@@ -1,14 +1,6 @@
 export class Store {
   private static _gcpData: string[][] = [];
-  // private static _gcpData: string[][] = [
-  //   ['GCP Label', 'X', 'Y', 'Z'],
-  //   ['gcp1', '27.73065137604506', '85.32836730666855', '4'],
-  //   ['gcp2', '27.73045756388116', '85.3287221286364', '4'],
-  //   ['gcp3', '27.730362992761272', '85.32901759376955', '4'],
-  //   ['gcp4', '27.730514773531667', '85.32826574052751', '4'],
-  //   ['gcp5', '27.73031371146446', '85.32852511222671', '4'],
-  // ];
-  private static _projection: string = 'EPSG:4326';
+  private static _projection: string = 'EPSG:4326'; // projection its static for now
   private static _cogUrl: string = '';
   private static _activeStep: number = 1;
   private static _gcpPointsGeoJson: Object | null = null;
