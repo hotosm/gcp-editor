@@ -58,14 +58,14 @@ export class RawImageMarker extends LitElement {
         });
 
         // Mouse wheel zoom functionality
-        container.addEventListener('wheel', function (event: any) {
-          event.preventDefault(); // Prevent page scrolling
-          if (event.deltaY < 0) {
-            panzoomInstance.zoomIn(); // Zoom in on scroll up
-          } else {
-            panzoomInstance.zoomOut(); // Zoom out on scroll down
-          }
-        });
+        // container.addEventListener('wheel', function (event: any) {
+        //   event.preventDefault(); // Prevent page scrolling
+        //   if (event.deltaY < 0) {
+        //     panzoomInstance.zoomIn(); // Zoom in on scroll up
+        //   } else {
+        //     panzoomInstance.zoomOut(); // Zoom out on scroll down
+        //   }
+        // });
 
         const addMarker = (topPosition: number, leftPosition: number) => {
           imageLabel.style.background = '#D73F3F';
