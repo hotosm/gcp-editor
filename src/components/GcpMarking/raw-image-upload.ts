@@ -38,7 +38,7 @@ export class RawImageUpload extends LitElement {
   }
 
   private updateMarkerDetails = (gcpData: any) => {
-    this.gcpMarkList = { ...this.gcpList, ...gcpData };
+    this.gcpMarkList = { ...this.gcpMarkList, ...gcpData };
   };
 
   private updateGcpData() {
