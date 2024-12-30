@@ -1,6 +1,6 @@
 import { html, LitElement, PropertyValues } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import gcpMarkerIcon from '../../assets/gcpMarker.png'
+import gcpMarkerIcon from '../../assets/gcpMarker.png';
 import panzoom from '@panzoom/panzoom';
 
 @customElement('raw-image-marker')
@@ -40,32 +40,25 @@ export class RawImageMarker extends LitElement {
     const img = new Image();
     img.src = this.imageUrl;
     img.onload = () => {
-      const width = img.naturalWidth;
-      const height = img.naturalHeight;
-      const imageAspectRation = width / height;
-      const imageContainerHeight = height / imageAspectRation;
-      const imageContainerWidth = width / imageAspectRation;
+      const naturalWidth = img.naturalWidth;
+      const naturalHeight = img.naturalHeight;
 
       setTimeout(() => {
-        container.style.height = imageContainerHeight / 3 + 'px';
-        container.style.width = imageContainerWidth / 3 + 'px';
-
         const panzoomInstance = panzoom(container as HTMLElement, {
-          maxScale: 5,
-          minScale: 1,
-          startScale: 1,
-          contain: 'outside',
+          maxScale: 300,
+          canvas: true,
+          step: 0.7,
         });
 
         // Mouse wheel zoom functionality
-        // container.addEventListener('wheel', function (event: any) {
-        //   event.preventDefault(); // Prevent page scrolling
-        //   if (event.deltaY < 0) {
-        //     panzoomInstance.zoomIn(); // Zoom in on scroll up
-        //   } else {
-        //     panzoomInstance.zoomOut(); // Zoom out on scroll down
-        //   }
-        // });
+        container.addEventListener('wheel', function (event: any) {
+          event.preventDefault(); // Prevent page scrolling
+          if (event.deltaY < 0) {
+            panzoomInstance.zoomIn(); // Zoom in on scroll up
+          } else {
+            panzoomInstance.zoomOut(); // Zoom out on scroll down
+          }
+        });
 
         const addMarker = (topPosition: number, leftPosition: number) => {
           imageLabel.style.background = '#D73F3F';
@@ -86,12 +79,15 @@ export class RawImageMarker extends LitElement {
           const rect = container.getBoundingClientRect(); // Get container's position
           const containerWidth = rect.width;
           const containerHeight = rect.height;
+          const widthRation = containerWidth / naturalWidth;
+          const heightRation = containerHeight / naturalHeight;
 
-          const x = mark.imageX / imageAspectRation / 3;
-          const y = mark.imageY / imageAspectRation / 3;
+          const x = mark.imageX * widthRation;
+          const y = mark.imageY * heightRation;
 
           const topPosition = (y / containerHeight) * 100; // Percentage from the top
           const leftPosition = (x / containerWidth) * 100; // Percentage from the left
+
           addMarker(topPosition, leftPosition);
         }
 
@@ -100,6 +96,8 @@ export class RawImageMarker extends LitElement {
           const rect = container.getBoundingClientRect(); // Get container's position
           const containerWidth = rect.width;
           const containerHeight = rect.height;
+          const widthRation = containerWidth / naturalWidth;
+          const heightRation = containerHeight / naturalHeight;
 
           // Get the click position relative to the container
           const x = event.clientX - rect.left;
@@ -108,8 +106,8 @@ export class RawImageMarker extends LitElement {
           const topPosition = (y / containerHeight) * 100; // Percentage from the top
           const leftPosition = (x / containerWidth) * 100; // Percentage from the left
 
-          const imageX = x * imageAspectRation * 3;
-          const imageY = y * imageAspectRation * 3;
+          const imageX = x / widthRation;
+          const imageY = y / heightRation;
 
           const finalGcpData = {
             gcpLabel: this.selectedGcpDetails?.[0],
@@ -139,7 +137,7 @@ export class RawImageMarker extends LitElement {
         >
           ${this.imageName}
         </div>
-        <div class="outer">
+        <div class="outer tw-bg-gray-50">
           <div
             class="image-container"
             id="panzoom-container-${this.index}"
