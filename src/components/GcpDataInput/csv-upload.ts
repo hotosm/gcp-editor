@@ -20,13 +20,14 @@ export class CsvUpload extends LitElement {
       this.gcpFile = file;
       parseCSVFile(file)
         .then((data) => {
-          console.log(data, 'data');
           if (data.length < 2) {
             this.errorMessage = 'Csv has no data row';
+            Store.setGcpData([]);
             return;
           }
           if (data[0].length > 4) {
             this.errorMessage = `Csv ${data[0]?.length} columns expected 4 columns`;
+            Store.setGcpData([]);
             return;
           }
           Store.setGcpData(data);

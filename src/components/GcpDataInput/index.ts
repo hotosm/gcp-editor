@@ -13,6 +13,7 @@ export class GcpDataInput extends LitElement {
   }
 
   handleNextClick() {
+    if (!Store.getGcpData()?.length) return;
     Store.setActiveStep(2);
   }
 
