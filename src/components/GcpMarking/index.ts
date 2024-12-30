@@ -32,7 +32,9 @@ export class GcpMarking extends LitElement {
   }
 
   private handleNextClick() {
-    Store.setActiveStep(3);
+    if (Object.keys(Store.getGcpDataWithXY() || {}).length) {
+      Store.setActiveStep(3);
+    }
   }
 
   private handlePreviousClick() {
