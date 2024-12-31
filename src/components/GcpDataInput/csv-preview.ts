@@ -29,7 +29,13 @@ export class CsvPreview extends LitElement {
           type: 'Point',
           coordinates: [data[2], data[1]],
         },
-        properties: { label: data[0] || `Gcp${index}` },
+        properties: {
+          id: data[0] || `Gcp${index}`,
+          label: data[0] || `Gcp${index}`,
+          x: data[1],
+          y: data[2],
+          z: data[3],
+        },
       })),
     };
     this.gcpGeojson = gcpPointsGeojson;
@@ -54,6 +60,14 @@ export class CsvPreview extends LitElement {
       text-align: left;
       font-size: 14px;
       border-bottom: 1px solid #ddd;
+    }
+
+    table th:first-child {
+      border-radius: 10px 0 0 0;
+    }
+
+    table th:last-child {
+      border-radius: 0 10px 0 0;
     }
 
     th {

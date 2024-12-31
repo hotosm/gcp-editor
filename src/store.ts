@@ -1,21 +1,25 @@
 export class Store {
   private static _gcpData: string[][] = [];
+  private static _projection: string = 'EPSG:4326'; // projection its static for now
   private static _cogUrl: string = '';
-  private static _projection: string = '';
   private static _activeStep: number = 1;
   private static _gcpPointsGeoJson: Object | null = null;
   private static _selectedGcpDetails: any = null;
   private static _gcpDataWithImageXY: any = {};
   private static _imageList = {};
+  private static _rawImageUrl = '';
+  private static _activeGcp = []; // it is only simulate  map and table gcp
 
   //   event for data update
   static readonly GCP_DATA_UPDATE = 'gcp-data-update';
   static readonly COG_URL_UPDATE = 'cog-url-update';
-  static readonly PROJECTION_UPDATE = 'cog-url-update';
+  static readonly PROJECTION_UPDATE = 'projection-url-update';
   static readonly ACTIVE_STEP_UPDATE = 'active-step-update';
   static readonly GCP_POINTS_GEOJSON = 'gcp-points-geojson';
   static readonly SELECTED_GCP_DETAILS_UPDATE = 'selected-gcp-details-update';
   static readonly GCP_DATA_WITH_IMAGE_XY_UPDATE = 'final-gcp-data-with-xy-update';
+  static readonly IMAGE_URL_UPDATE = 'image-url-update';
+  static readonly ACTIVE_GCP_UPDATE = 'active-gcp-update';
 
   // ***
   static readonly IMAGE_LIST_UPDATE = 'image-list-update';
@@ -91,5 +95,23 @@ export class Store {
   static setImageList(data: any) {
     this._imageList = data;
     document.dispatchEvent(new CustomEvent(Store.IMAGE_LIST_UPDATE, { detail: data }));
+  }
+
+  static getRawImageUrl(): any {
+    return this._rawImageUrl;
+  }
+
+  static setRawImageUrl(data: any) {
+    this._rawImageUrl = data;
+    document.dispatchEvent(new CustomEvent(Store.IMAGE_URL_UPDATE, { detail: data }));
+  }
+
+  static getActiveGcp(): any {
+    return this._activeGcp;
+  }
+
+  static setActiveGcp(data: any) {
+    this._activeGcp = data;
+    document.dispatchEvent(new CustomEvent(Store.ACTIVE_GCP_UPDATE, { detail: data }));
   }
 }

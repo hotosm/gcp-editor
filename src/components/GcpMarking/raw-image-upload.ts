@@ -5,12 +5,11 @@ import './raw-image-marker';
 
 @customElement('raw-image-upload')
 export class RawImageUpload extends LitElement {
-  @property() rawImages: any = [];
-  @property() gcpMarks: any = {};
-  @property() imageList: any = {};
-  @property() gcpList: any = {};
+  @property() imageList: any = {}; // the list of images of all gcp
+  @property() gcpList: any = {}; // the list of all gcp marks
   @property() selectedGcpDetails: any = [];
-  @property() handleSaveChanges: any;
+  @property() rawImageList: any[] = []; // list of active gcp's image list
+  @property() gcpMarkList: any = {}; // list of active gcp's image mark
 
   createRenderRoot() {
     // Return `this` instead of a shadow root, meaning no Shadow DOM is used
@@ -19,27 +18,14 @@ export class RawImageUpload extends LitElement {
 
   connectedCallback() {
     super.connectedCallback();
-    this.rawImages = this.imageList?.[this.selectedGcpDetails?.[0]] || [];
-    this.gcpMarks = this.gcpList?.[this.selectedGcpDetails?.[0]] || {};
-
-    // Prevent the dialog from closing when the user clicks on the overlay
-    const dialog = document.querySelector('.dialog-deny-close') as HTMLElement;
-    dialog.addEventListener('sl-request-close', (event) => {
-      if (event.detail.source === 'overlay') {
-        event.preventDefault();
-      }
-      Store.setSelectedGcpDetails(null);
-    });
+    this.imageList = Store.getImageList();
+    this.gcpList = Store.getGcpDataWithXY();
+    this.selectedGcpDetails = Store.getSelectedGcpDetails();
+    this.rawImageList = this.imageList?.[this.selectedGcpDetails?.[0]] || [];
+    this.gcpMarkList = this.gcpList?.[this.selectedGcpDetails?.[0]] || {};
   }
 
   disconnectedCallback() {
-    this.rawImages = this.imageList?.[this.selectedGcpDetails?.[0]] || [];
-    this.gcpMarks = this.gcpList?.[this.selectedGcpDetails?.[0]] || {};
-
-    // Prevent the dialog from closing when the user clicks on the overlay
-    const dialog = document.querySelector('.dialog-deny-close') as HTMLElement;
-    dialog?.removeEventListener('sl-request-close', () => {});
-
     super.disconnectedCallback();
   }
 
@@ -47,29 +33,26 @@ export class RawImageUpload extends LitElement {
     const input = event.target as HTMLInputElement;
     const files = input?.files;
     if (files) {
-      this.rawImages = Object.values(files);
+      this.rawImageList = Object.values(files);
     }
   }
 
   private updateMarkerDetails = (gcpData: any) => {
-    this.gcpMarks = { ...this.gcpMarks, ...gcpData };
+    this.gcpMarkList = { ...this.gcpMarkList, ...gcpData };
   };
 
   private updateGcpData() {
-    this.handleSaveChanges({
-      images: { ...this.imageList, [this.selectedGcpDetails[0]]: this.rawImages },
-      markings: { ...this.gcpList, [this.selectedGcpDetails[0]]: this.gcpMarks },
-      gcpLabel: [this.selectedGcpDetails[0]],
-    });
+    Store.setImageList({ ...this.imageList, [this.selectedGcpDetails[0]]: this.rawImageList });
+    Store.setGcpDataWithXY({ ...this.gcpList, [this.selectedGcpDetails[0]]: this.gcpMarkList });
     Store.setSelectedGcpDetails(null);
-    this.rawImages = [];
-    this.gcpMarks = {};
+    this.rawImageList = [];
+    this.gcpMarkList = {};
   }
 
   render() {
     return html`
-      <div class="tw-h-[80vh] tw-relative">
-        <div class="tw-max-w-full">
+      <div class="tw-w-full tw-h-full tw-flex tw-flex-col">
+        <div class="tw-w-full tw-h-fit">
           <label
             class=" tw-border-gray-400 tw-border-dashed tw-border-2 tw-rounded-lg tw-h-20 tw-w-full tw-flex tw-items-center tw-justify-center tw-relative"
           >
@@ -88,23 +71,24 @@ export class RawImageUpload extends LitElement {
             </div>
           </label>
         </div>
-        <div class="images-list-wrapper tw-relative">
-          ${this.rawImages?.map(
+        <div class="tw-flex tw-max-h-full tw-gap-4 tw-flex-wrap tw-w-full tw-overflow-y-auto tw-h-[60vh] tw-mt-4">
+          ${this.rawImageList?.map(
             (rawImage: File, index: number) =>
               html`
                 <raw-image-marker
-                  .image=${rawImage}
+                  .imageName=${rawImage.name}
+                  .imageUrl=${URL.createObjectURL(rawImage)}
                   index=${index}
                   .gcpMarkerHandler=${this.updateMarkerDetails}
-                  .mark=${this.gcpMarks?.[rawImage.name]}
+                  .mark=${this.gcpMarkList?.[rawImage.name]}
                   .selectedGcpDetails=${this.selectedGcpDetails}
                 ></raw-image-marker>
               `
           )}
         </div>
-        <div class="tw-flex tw-justify-center tw-w-full tw-absolute tw-bottom-4" @click=${() => this.updateGcpData()}>
-          <hot-button>Save Changes</hot-button>
-        </div>
+      </div>
+      <div class="tw-flex tw-justify-center tw-w-full tw-absolute tw-bottom-4" @click=${() => this.updateGcpData()}>
+        <hot-button>Save Changes</hot-button>
       </div>
     `;
   }
