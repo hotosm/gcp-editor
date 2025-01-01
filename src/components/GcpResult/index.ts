@@ -47,7 +47,9 @@ export class GcpResult extends LitElement {
       width: 100%;
       overflow-x: auto; /* Enable horizontal scrolling when the table overflows */
       -webkit-overflow-scrolling: touch; /* Smooth scrolling for mobile devices */
-      margin: 20px;
+      margin-top: 20px; /* Optional: to maintain top margin */
+      overflow: auto;
+      max-height: 60vh;
     }
 
     table {

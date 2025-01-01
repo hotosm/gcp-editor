@@ -26,12 +26,17 @@ export class GcpMarkingTable extends LitElement {
     :host {
       display: block;
       padding: 10px;
+      width: 100%;
+      max-height: 100%;
     }
     /* Wrapper for the table */
     .table-wrapper {
+      width: 100%;
       overflow-x: auto; /* Enable horizontal scrolling when the table overflows */
       -webkit-overflow-scrolling: touch; /* Smooth scrolling for mobile devices */
       margin-top: 20px; /* Optional: to maintain top margin */
+      overflow: auto;
+      max-height: 60vh;
     }
 
     table {
@@ -122,33 +127,35 @@ export class GcpMarkingTable extends LitElement {
 
   protected render() {
     return html`
-      <table>
-        <thead>
-          <tr>
-            <th>Label</th>
-            <th>Marked image count</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          ${this.gcpData.slice(1).map(
-            (row: Array<String>) => html`
-              <tr class=${this.activeGcp?.[0] === row?.[0] ? 'active' : ''} @click=${() => Store.setActiveGcp(row)}>
-                <td>
-                  <span>${row[0]}</span>
-                </td>
-                <td>${this.getMarkedImageCount(row[0])}</td>
-                <td>
-                  <div class="upload-wrapper" @click=${() => this.handleGcpDataSelection(row)}>
-                    <img src=${uploadImage} />
-                    <span>Image</span>
-                  </div>
-                </td>
-              </tr>
-            `
-          )}
-        </tbody>
-      </table>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Label</th>
+              <th>Marked image count</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            ${this.gcpData.slice(1).map(
+              (row: Array<String>) => html`
+                <tr class=${this.activeGcp?.[0] === row?.[0] ? 'active' : ''} @click=${() => Store.setActiveGcp(row)}>
+                  <td>
+                    <span>${row[0]}</span>
+                  </td>
+                  <td>${this.getMarkedImageCount(row[0])}</td>
+                  <td>
+                    <div class="upload-wrapper" @click=${() => this.handleGcpDataSelection(row)}>
+                      <img src=${uploadImage} />
+                      <span>Image</span>
+                    </div>
+                  </td>
+                </tr>
+              `
+            )}
+          </tbody>
+        </table>
+      </div>
     `;
   }
 }

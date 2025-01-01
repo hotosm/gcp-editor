@@ -47,6 +47,14 @@ export class CsvPreview extends LitElement {
       display: block;
       padding: 10px;
     }
+    .table-wrapper {
+      width: 100%;
+      overflow-x: auto; /* Enable horizontal scrolling when the table overflows */
+      -webkit-overflow-scrolling: touch; /* Smooth scrolling for mobile devices */
+      margin-top: 20px; /* Optional: to maintain top margin */
+      overflow: auto;
+      max-height: 65vh;
+    }
     table {
       width: 100%;
       border-collapse: collapse;
@@ -93,32 +101,34 @@ export class CsvPreview extends LitElement {
 
   render() {
     return html`
-      <table>
-        <thead>
-          <tr>
-            ${this.gcpData[0]?.map(
-              (header: String) =>
-                html`
-                  <th>${header}</th>
-                `
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              ${this.gcpData[0]?.map(
+                (header: String) =>
+                  html`
+                    <th>${header}</th>
+                  `
+              )}
+            </tr>
+          </thead>
+          <tbody>
+            ${this.gcpData.slice(1).map(
+              (row: Array<String>) => html`
+                <tr>
+                  ${row.map(
+                    (cell: String) =>
+                      html`
+                        <td>${cell}</td>
+                      `
+                  )}
+                </tr>
+              `
             )}
-          </tr>
-        </thead>
-        <tbody>
-          ${this.gcpData.slice(1).map(
-            (row: Array<String>) => html`
-              <tr>
-                ${row.map(
-                  (cell: String) =>
-                    html`
-                      <td>${cell}</td>
-                    `
-                )}
-              </tr>
-            `
-          )}
-        </tbody>
-      </table>
+          </tbody>
+        </table>
+      </div>
     `;
   }
 }
