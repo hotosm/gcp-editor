@@ -1,5 +1,5 @@
 import { css, html, LitElement, PropertyValues } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { customElement, property, state } from 'lit/decorators.js';
 import { Store } from '../../store';
 
 // Define the type for a row in the gcp.txt file
@@ -25,6 +25,8 @@ export class GcpResult extends LitElement {
    * Holds the raw GCP data fetched from the store.
    */
   @property() gcpList = Store.getGcpDataWithXY();
+  @state() buttonText = Store.getFinalButtonText();
+  @state() finalButtonClickFunction = Store.getCallbackFunc();
 
   /**
    * Property: gcpInCsv
@@ -47,7 +49,9 @@ export class GcpResult extends LitElement {
       width: 100%;
       overflow-x: auto; /* Enable horizontal scrolling when the table overflows */
       -webkit-overflow-scrolling: touch; /* Smooth scrolling for mobile devices */
-      margin: 20px;
+      margin-top: 20px; /* Optional: to maintain top margin */
+      overflow: auto;
+      max-height: 60vh;
     }
 
     table {
@@ -113,6 +117,8 @@ export class GcpResult extends LitElement {
    */
   protected firstUpdated(_changedProperties: PropertyValues): void {
     this.gcpInCsv = this.convertToArray(this.gcpList);
+    this.buttonText = Store.getFinalButtonText();
+    this.finalButtonClickFunction = Store.getCallbackFunc();
   }
 
   /**
@@ -185,6 +191,27 @@ export class GcpResult extends LitElement {
     Store.setActiveStep(2);
   }
 
+  private handleFinalButtonClick() {
+    if (this.finalButtonClickFunction) {
+      if (!this.gcpInCsv || this.gcpInCsv.length <= 1) return;
+      // Header for the projection (hardcoded for now)
+      // TODO support other coord systems / not hardcoded to EPSG:4326
+      const header = '+proj=utm +zone=10 +ellps=WGS84 +datum=WGS84 +units=m +no_defs\n';
+      // Convert GCP data to space-separated rows
+      const rows = this.gcpInCsv
+        .slice(1) // Skip headers
+        .map((row) => `${row[0]} ${row[1]} ${row[2]} ${row[3]} ${row[4]} ${row[5]}`) // Format: X Y Z ImageX ImageY FileName
+        .join('\n');
+
+      const finalContent = header + rows;
+      // Create a Blob for the file and trigger download
+      const blob = new Blob([finalContent], { type: 'text/plain;charset=utf-8;' });
+      this.finalButtonClickFunction(blob);
+    } else {
+      this.handleGcpFileDownload();
+    }
+  }
+
   render() {
     return html`
       <div class="table-wrapper">
@@ -220,7 +247,7 @@ export class GcpResult extends LitElement {
       </div>
       <div class="button-wrapper">
         <hot-button @click=${this.handlePreviousClick}>Previous</hot-button>
-        <hot-button @click=${this.handleGcpFileDownload}>Finish</hot-button>
+        <hot-button @click=${this.handleFinalButtonClick}>${this.buttonText}</hot-button>
       </div>
     `;
   }

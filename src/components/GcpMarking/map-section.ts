@@ -35,10 +35,13 @@ export class MapSection extends LitElement {
     :host {
       display: block;
       padding: 10px;
+      height: 100%;
+      width: 100%;
     }
     #map-container {
       display: flex;
-      height: 87vh;
+      min-height: 40vh;
+      height: 100%;
       width: 100%;
       border-radius: 8px;
       overflow: hidden;

@@ -9,6 +9,8 @@ export class Store {
   private static _imageList = {};
   private static _rawImageUrl = '';
   private static _activeGcp = []; // it is only simulate  map and table gcp
+  private static _callbackFunc = null;
+  private static _finalButtonText = 'Download';
 
   //   event for data update
   static readonly GCP_DATA_UPDATE = 'gcp-data-update';
@@ -113,5 +115,21 @@ export class Store {
   static setActiveGcp(data: any) {
     this._activeGcp = data;
     document.dispatchEvent(new CustomEvent(Store.ACTIVE_GCP_UPDATE, { detail: data }));
+  }
+
+  // final function
+  static setCallbackFunc(data: any) {
+    this._callbackFunc = data;
+  }
+  static getCallbackFunc(): any {
+    return this._callbackFunc;
+  }
+
+  static setFinalButtonText(data: any) {
+    this._finalButtonText = data;
+  }
+
+  static getFinalButtonText(): string {
+    return this._finalButtonText;
   }
 }
