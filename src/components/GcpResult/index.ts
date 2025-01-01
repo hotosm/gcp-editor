@@ -117,8 +117,6 @@ export class GcpResult extends LitElement {
    */
   protected firstUpdated(_changedProperties: PropertyValues): void {
     this.gcpInCsv = this.convertToArray(this.gcpList);
-    this.buttonText = Store.getFinalButtonText();
-    this.finalButtonClickFunction = Store.getCallbackFunc();
   }
 
   /**
