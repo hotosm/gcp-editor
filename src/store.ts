@@ -116,20 +116,4 @@ export class Store {
     this._activeGcp = data;
     document.dispatchEvent(new CustomEvent(Store.ACTIVE_GCP_UPDATE, { detail: data }));
   }
-
-  // final function
-  static setCallbackFunc(data: any) {
-    this._callbackFunc = data;
-  }
-  static getCallbackFunc(): any {
-    return this._callbackFunc;
-  }
-
-  static setFinalButtonText(data: any) {
-    this._finalButtonText = data;
-  }
-
-  static getFinalButtonText(): string {
-    return this._finalButtonText;
-  }
 }
