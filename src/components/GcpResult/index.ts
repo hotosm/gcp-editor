@@ -1,5 +1,5 @@
 import { css, html, LitElement, PropertyValues } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { customElement, property } from 'lit/decorators.js';
 import { Store } from '../../store';
 
 // Define the type for a row in the gcp.txt file
@@ -25,8 +25,8 @@ export class GcpResult extends LitElement {
    * Holds the raw GCP data fetched from the store.
    */
   @property() gcpList = Store.getGcpDataWithXY();
-  @state() buttonText = Store.getFinalButtonText();
-  @state() finalButtonClickFunction = Store.getCallbackFunc();
+  @property() buttonText = '';
+  @property({ type: Function }) finalButtonClickFunction = null;
 
   /**
    * Property: gcpInCsv
@@ -170,7 +170,6 @@ export class GcpResult extends LitElement {
       .join('\n');
 
     const finalContent = header + rows;
-
     // Create a Blob for the file and trigger download
     const blob = new Blob([finalContent], { type: 'text/plain;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
@@ -191,12 +190,13 @@ export class GcpResult extends LitElement {
     Store.setActiveStep(2);
   }
 
-  private handleFinalButtonClick() {
+  handleFinalButtonClick() {
     if (this.finalButtonClickFunction) {
       if (!this.gcpInCsv || this.gcpInCsv.length <= 1) return;
       // Header for the projection (hardcoded for now)
       // TODO support other coord systems / not hardcoded to EPSG:4326
       const header = '+proj=utm +zone=10 +ellps=WGS84 +datum=WGS84 +units=m +no_defs\n';
+
       // Convert GCP data to space-separated rows
       const rows = this.gcpInCsv
         .slice(1) // Skip headers
@@ -204,8 +204,10 @@ export class GcpResult extends LitElement {
         .join('\n');
 
       const finalContent = header + rows;
+
       // Create a Blob for the file and trigger download
       const blob = new Blob([finalContent], { type: 'text/plain;charset=utf-8;' });
+      // @ts-ignore
       this.finalButtonClickFunction(blob);
     } else {
       this.handleGcpFileDownload();
