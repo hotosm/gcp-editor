@@ -1,6 +1,6 @@
 {
   "name": "@hotosm/gcp-editor",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A web component for working with Ground Control Points.",
   "homepage": "https://github.com/hotosm/gcp-editor#readme",
   "author": {
