@@ -25,8 +25,8 @@ export class GcpResult extends LitElement {
    * Holds the raw GCP data fetched from the store.
    */
   @property() gcpList = Store.getGcpDataWithXY();
-  @property() buttonText = '';
-  @property({ type: Function }) finalButtonClickFunction = null;
+  @property({ type: String }) buttonText = '';
+  @property({ type: String }) customEvent = null;
 
   /**
    * Property: gcpInCsv
@@ -189,12 +189,11 @@ export class GcpResult extends LitElement {
   }
 
   handleFinalButtonClick() {
-    if (this.finalButtonClickFunction) {
+    if (this.customEvent) {
       if (!this.gcpInCsv || this.gcpInCsv.length <= 1) return;
       // Header for the projection (hardcoded for now)
       // TODO support other coord systems / not hardcoded to EPSG:4326
       const header = '+proj=utm +zone=10 +ellps=WGS84 +datum=WGS84 +units=m +no_defs\n';
-
       // Convert GCP data to space-separated rows
       const rows = this.gcpInCsv
         .slice(1) // Skip headers
@@ -202,11 +201,8 @@ export class GcpResult extends LitElement {
         .join('\n');
 
       const finalContent = header + rows;
-
-      // Create a Blob for the file and trigger download
-      const blob = new Blob([finalContent], { type: 'text/plain;charset=utf-8;' });
-      // @ts-ignore
-      this.finalButtonClickFunction(blob);
+      // dispatch a custom event sent as a prop and set final content on detail of event.
+      document.dispatchEvent(new CustomEvent(this.customEvent, { detail: finalContent }));
     } else {
       this.handleGcpFileDownload();
     }

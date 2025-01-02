@@ -11,7 +11,7 @@ import './components/GcpResult/index';
 
 @customElement('gcp-editor')
 export class GcpEditor extends LitElement {
-  @property({}) callbackFunc = null;
+  @property({}) customEvent = null;
   @property({}) finalButtonText = 'Download';
   @property({ type: String }) rawImageUrl = '';
   @property({ type: String }) cogUrl = '';
@@ -28,17 +28,7 @@ export class GcpEditor extends LitElement {
     super.connectedCallback();
     Store.setRawImageUrl(this.rawImageUrl);
     Store.setCogUrl(this.cogUrl);
-    //*********************************** */
-    const callbackFunc = this.getAttribute('callbackFunc');
-    if (callbackFunc) {
-      // Convert string back to function
-      try {
-        this.callbackFunc = new Function('return ' + callbackFunc)();
-      } catch (error) {
-        console.error('Error creating function from attribute:', error);
-      }
-    }
-    // ****************
+
     // Listen for updates to CSV data
     document.addEventListener(Store.GCP_DATA_UPDATE, this.handleGcpDataUpdate.bind(this));
     document.addEventListener(Store.GCP_DATA_WITH_IMAGE_XY_UPDATE, this.handleGcpDataWithXYUpdate.bind(this));
@@ -80,10 +70,7 @@ export class GcpEditor extends LitElement {
                 <gcp-marking></gcp-marking>
               `
             : html`
-                <gcp-result
-                  .finalButtonClickFunction=${this.callbackFunc}
-                  buttonText=${this.finalButtonText}
-                ></gcp-result>
+                <gcp-result .customEvent=${this.customEvent} buttonText=${this.finalButtonText}></gcp-result>
               `}
         </div>
       </div>
