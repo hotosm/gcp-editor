@@ -45,6 +45,7 @@ export class RawImageMarker extends LitElement {
 
       setTimeout(() => {
         const panzoomInstance = panzoom(container as HTMLElement, {
+          minScale: 1,
           maxScale: 300,
           canvas: true,
           step: 0.7,
