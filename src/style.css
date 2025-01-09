@@ -74,7 +74,7 @@ hot-button.is-active::part(base){
   color:#b91c1c
 }
 
-  /* primary button */
+  /* secondary button */
   hot-button.secondary::part(base) {
     border-color: #d73f37;
     background-color: white;

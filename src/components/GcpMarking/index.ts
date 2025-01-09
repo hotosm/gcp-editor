@@ -34,7 +34,9 @@ export class GcpMarking extends LitElement {
   private handleNextClick() {
     if (Object.keys(Store.getGcpDataWithXY() || {}).length) {
       Store.setActiveStep(3);
+      return;
     }
+    alert('No marks on images');
   }
 
   private handlePreviousClick() {
@@ -49,8 +51,8 @@ export class GcpMarking extends LitElement {
             <gcp-marking-table></gcp-marking-table>
           </div>
           <div class="tw-h-fit tw-py-5 tw-flex tw-justify-between">
-            <hot-button @click=${() => this.handlePreviousClick()}>Previous</hot-button>
-            <hot-button @click=${() => this.handleNextClick()}>Next</hot-button>
+            <hot-button class="secondary" @click=${() => this.handlePreviousClick()}>Previous</hot-button>
+            <hot-button class="primary" @click=${() => this.handleNextClick()}>Next</hot-button>
           </div>
         </div>
         <div class="tw-col-span-3"><map-section></map-section></div>

@@ -172,7 +172,7 @@ export class RawImageUpload extends LitElement {
               `}
         </div>
       </div>
-      <div class="tw-flex tw-justify-center tw-w-full tw-absolute tw-bottom-4">
+      <div class="tw-flex tw-justify-between tw-w-full tw-absolute tw-bottom-4">
         <div></div>
         ${this.rawImageList?.length
           ? html`

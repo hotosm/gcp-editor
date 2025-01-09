@@ -108,6 +108,37 @@ export class GcpResult extends LitElement {
       justify-items: center;
       gap: 10px;
     }
+
+    /* primary button */
+    hot-button.primary::part(base) {
+      background-color: #d73f37;
+      color: white !important;
+      border: 0px;
+    }
+    hot-button.primary::part(base):hover {
+      background-color: #b91c1c;
+    }
+
+    hot-button::part(base):hover {
+      border-color: #b91c1c;
+      color: #b91c1c;
+    }
+
+    hot-button.is-active::part(base) {
+      border-color: #b91c1c;
+      color: #b91c1c;
+    }
+
+    /* secondary button */
+    hot-button.secondary::part(base) {
+      border-color: #d73f37;
+      background-color: white;
+      color: #b91c1c !important;
+    }
+    hot-button.secondary::part(base):hover {
+      text-decoration: underline;
+      text-decoration-color: #d73f37;
+    }
   `;
 
   /**
@@ -242,8 +273,8 @@ export class GcpResult extends LitElement {
         </table>
       </div>
       <div class="button-wrapper">
-        <hot-button @click=${this.handlePreviousClick}>Previous</hot-button>
-        <hot-button @click=${this.handleFinalButtonClick}>${this.buttonText}</hot-button>
+        <hot-button class="secondary" @click=${this.handlePreviousClick}>Previous</hot-button>
+        <hot-button class="primary" @click=${this.handleFinalButtonClick}>${this.buttonText}</hot-button>
       </div>
     `;
   }

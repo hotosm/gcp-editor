@@ -27,7 +27,7 @@ export class GcpDataInput extends LitElement {
         <div class="tw-flex tw-flex-col tw-gap-5 tw-col-span-2 tw-bg-[#fff] tw-p-5 tw-rounded-xl tw-relative">
           <csv-upload></csv-upload>
           <div class="tw-absolute tw-bottom-4 tw-right-10">
-            <hot-button @click=${() => this.handleNextClick()}>Next</hot-button>
+            <hot-button class="primary" @click=${() => this.handleNextClick()}>Next</hot-button>
           </div>
         </div>
       </div>
