@@ -144,7 +144,7 @@ export class RawImageMarker extends LitElement {
           this.gcpMarkerHandler({ [imageName]: finalGcpData });
           addMarker(topPosition, leftPosition);
         });
-      }, 1000);
+      }, 100);
     };
   }
 
