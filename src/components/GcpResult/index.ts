@@ -101,8 +101,14 @@ export class GcpResult extends LitElement {
       border-left: none;
     }
     .button-wrapper {
-      width: 100%;
       padding: 20px 20px;
+      display: flex;
+      justify-content: space-between;
+      justify-items: center;
+      gap: 10px;
+    }
+
+    .main-btns {
       display: flex;
       justify-content: center;
       justify-items: center;
@@ -138,6 +144,15 @@ export class GcpResult extends LitElement {
     hot-button.secondary::part(base):hover {
       text-decoration: underline;
       text-decoration-color: #d73f37;
+    }
+
+    hot-button.download::part(base):hover {
+      background-color: #ff7b00;
+    }
+    hot-button.download::part(base) {
+      background-color: #ffa500;
+      color: white !important;
+      border: 0px;
     }
   `;
 
@@ -234,8 +249,6 @@ export class GcpResult extends LitElement {
       const finalContent = header + rows;
       // dispatch a custom event sent as a prop and set final content on detail of event.
       document.dispatchEvent(new CustomEvent(this.customEvent, { detail: finalContent }));
-    } else {
-      this.handleGcpFileDownload();
     }
   }
 
@@ -274,7 +287,17 @@ export class GcpResult extends LitElement {
       </div>
       <div class="button-wrapper">
         <hot-button class="secondary" @click=${this.handlePreviousClick}>Previous</hot-button>
-        <hot-button class="primary" @click=${this.handleFinalButtonClick}>${this.buttonText}</hot-button>
+
+        <div class="main-buttons">
+          <hot-button class=${this.customEvent ? 'download' : 'primary'} @click=${this.handleGcpFileDownload}>
+            Download
+          </hot-button>
+          ${this.customEvent
+            ? html`
+                <hot-button class="primary" @click=${this.handleFinalButtonClick}>${this.buttonText}</hot-button>
+              `
+            : null}
+        </div>
       </div>
     `;
   }
