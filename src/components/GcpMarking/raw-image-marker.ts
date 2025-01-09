@@ -45,19 +45,41 @@ export class RawImageMarker extends LitElement {
 
       setTimeout(() => {
         const panzoomInstance = panzoom(container as HTMLElement, {
+          minScale: 1,
           maxScale: 300,
           canvas: true,
           step: 0.7,
         });
 
+        // transform marker size as per zoom in/out to maintain marker size
+        const setMarkerScale = () => {
+          const panzoomScale = panzoomInstance.getScale();
+          if (panzoomScale > 1) {
+            marker.style.transform = `scale(${1 / panzoomScale})`;
+          } else {
+            marker.style.transform = `scale(1)`;
+          }
+        };
+
+        let debounceTimeout = 0;
+        // Function to debounce the zoom event
+        const debounceZoom = (event: any) => {
+          clearTimeout(debounceTimeout);
+          debounceTimeout = setTimeout(() => {
+            if (event.deltaY < 0) {
+              panzoomInstance.zoomIn(); // Zoom in on scroll up
+              setMarkerScale();
+            } else {
+              panzoomInstance.zoomOut(); // Zoom out on scroll down
+              setMarkerScale();
+            }
+          }, 200); // 200ms debounce
+        };
+
         // Mouse wheel zoom functionality
         container.addEventListener('wheel', function (event: any) {
           event.preventDefault(); // Prevent page scrolling
-          if (event.deltaY < 0) {
-            panzoomInstance.zoomIn(); // Zoom in on scroll up
-          } else {
-            panzoomInstance.zoomOut(); // Zoom out on scroll down
-          }
+          debounceZoom(event);
         });
 
         const addMarker = (topPosition: number, leftPosition: number) => {
@@ -73,6 +95,7 @@ export class RawImageMarker extends LitElement {
 
           marker.style.top = `calc(${topPosition}% - ${markerHeight / 2}px)`;
           marker.style.left = `calc(${leftPosition}% - ${markerWidth / 2}px)`;
+          setMarkerScale();
         };
 
         if (mark && panzoomInstance) {
@@ -121,7 +144,7 @@ export class RawImageMarker extends LitElement {
           this.gcpMarkerHandler({ [imageName]: finalGcpData });
           addMarker(topPosition, leftPosition);
         });
-      }, 1000);
+      }, 100);
     };
   }
 

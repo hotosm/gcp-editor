@@ -39,6 +39,7 @@ export class GcpEditor extends LitElement {
     document.removeEventListener(Store.GCP_DATA_UPDATE, this.handleGcpDataUpdate.bind(this));
     document.removeEventListener(Store.GCP_DATA_WITH_IMAGE_XY_UPDATE, this.handleGcpDataWithXYUpdate.bind(this));
     document.removeEventListener(Store.ACTIVE_STEP_UPDATE, this.handleActiveStepUpdate.bind(this));
+    Store.clearState();
     super.disconnectedCallback();
   }
 

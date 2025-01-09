@@ -9,8 +9,6 @@ export class Store {
   private static _imageList = {};
   private static _rawImageUrl = '';
   private static _activeGcp = []; // it is only simulate  map and table gcp
-  private static _callbackFunc = null;
-  private static _finalButtonText = 'Download';
 
   //   event for data update
   static readonly GCP_DATA_UPDATE = 'gcp-data-update';
@@ -115,5 +113,19 @@ export class Store {
   static setActiveGcp(data: any) {
     this._activeGcp = data;
     document.dispatchEvent(new CustomEvent(Store.ACTIVE_GCP_UPDATE, { detail: data }));
+  }
+
+  // to clear all global states
+  static clearState() {
+    this._gcpData = [];
+    this._projection = 'EPSG:4326';
+    this._cogUrl = '';
+    this._activeStep = 1;
+    this._gcpPointsGeoJson = null;
+    this._selectedGcpDetails = null;
+    this._gcpDataWithImageXY = {};
+    this._imageList = {};
+    this._rawImageUrl = '';
+    this._activeGcp = [];
   }
 }
