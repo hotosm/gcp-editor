@@ -51,13 +51,25 @@ export class RawImageMarker extends LitElement {
           step: 0.7,
         });
 
+        // transform marker size as per zoom in/out to maintain marker size
+        const setMarkerScale = () => {
+          const panzoomScale = panzoomInstance.getScale();
+          if (panzoomScale > 1) {
+            marker.style.transform = `scale(${1 / panzoomScale})`;
+          } else {
+            marker.style.transform = `scale(1)`;
+          }
+        };
+
         // Mouse wheel zoom functionality
         container.addEventListener('wheel', function (event: any) {
           event.preventDefault(); // Prevent page scrolling
           if (event.deltaY < 0) {
             panzoomInstance.zoomIn(); // Zoom in on scroll up
+            setMarkerScale();
           } else {
             panzoomInstance.zoomOut(); // Zoom out on scroll down
+            setMarkerScale();
           }
         });
 
@@ -74,6 +86,7 @@ export class RawImageMarker extends LitElement {
 
           marker.style.top = `calc(${topPosition}% - ${markerHeight / 2}px)`;
           marker.style.left = `calc(${leftPosition}% - ${markerWidth / 2}px)`;
+          setMarkerScale();
         };
 
         if (mark && panzoomInstance) {
