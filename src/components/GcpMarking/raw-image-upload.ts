@@ -141,7 +141,7 @@ export class RawImageUpload extends LitElement {
             />
             <div class="tw-flex tw-flex-col tw-items-center tw-justify-center">
               <span class="material-symbols-outlined tw-text-primary">cloud_upload</span>
-              <span class="tw-text tw-font-light">Please upload an image file (.jpg, .tiff, .png)</span>
+              <span class="tw-text tw-font-light">Please upload an image file (.jpg, .png)</span>
             </div>
           </label>
         </div>
