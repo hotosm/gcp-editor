@@ -61,16 +61,25 @@ export class RawImageMarker extends LitElement {
           }
         };
 
+        let debounceTimeout = 0;
+        // Function to debounce the zoom event
+        const debounceZoom = (event: any) => {
+          clearTimeout(debounceTimeout);
+          debounceTimeout = setTimeout(() => {
+            if (event.deltaY < 0) {
+              panzoomInstance.zoomIn(); // Zoom in on scroll up
+              setMarkerScale();
+            } else {
+              panzoomInstance.zoomOut(); // Zoom out on scroll down
+              setMarkerScale();
+            }
+          }, 200); // 200ms debounce
+        };
+
         // Mouse wheel zoom functionality
         container.addEventListener('wheel', function (event: any) {
           event.preventDefault(); // Prevent page scrolling
-          if (event.deltaY < 0) {
-            panzoomInstance.zoomIn(); // Zoom in on scroll up
-            setMarkerScale();
-          } else {
-            panzoomInstance.zoomOut(); // Zoom out on scroll down
-            setMarkerScale();
-          }
+          debounceZoom(event);
         });
 
         const addMarker = (topPosition: number, leftPosition: number) => {
