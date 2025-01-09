@@ -70,7 +70,9 @@ export class RawImageFetch extends LitElement {
     this.selectedGcpDetails = Store.getSelectedGcpDetails();
     this.rawImageList = this.imageList?.[this.selectedGcpDetails?.[0]] || [];
     this.gcpMarkList = this.gcpList?.[this.selectedGcpDetails?.[0]] || {};
-    this.numberOfPages = Math.ceil(this.imageList?.[this.selectedGcpDetails?.[0]].length / this.imagesPerPage);
+    this.numberOfPages = this.imageList?.[this.selectedGcpDetails?.[0]]?.length
+      ? Math.ceil(this.imageList?.[this.selectedGcpDetails?.[0]]?.length / this?.imagesPerPage)
+      : 1;
 
     if (!this.rawImageList || (!this.rawImageList?.length && this.imageUrl)) {
       this.isLoadingImages = true;
