@@ -70,7 +70,7 @@ export class RawImageUpload extends LitElement {
     this.gcpMarkList = this.gcpList?.[this.selectedGcpDetails?.[0]] || {};
     this.numberOfPages = this.imageList?.[this.selectedGcpDetails?.[0]]?.length
       ? Math.ceil(this.imageList?.[this.selectedGcpDetails?.[0]].length / this.imagesPerPage)
-      : 1;
+      : 0;
   }
 
   disconnectedCallback() {
@@ -100,13 +100,10 @@ export class RawImageUpload extends LitElement {
 
   protected updated(_changedProperties: PropertyValues): void {
     _changedProperties.forEach((_, propName) => {
-      if (propName === 'numberOfPages') {
+      if (propName === 'numberOfPages' || propName === 'rawImageList' || propName === 'currentPage') {
         if (this.numberOfPages) {
           this.getOnViewImages();
         }
-      }
-      if (propName === 'currentPage') {
-        this.getOnViewImages();
       }
     });
     super.update(_changedProperties);
