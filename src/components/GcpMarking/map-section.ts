@@ -114,10 +114,27 @@ export class MapSection extends LitElement {
       });
       satelliteLayer.set('id', 'satellite');
 
+      const topoLayer = new Tile({
+        source: new XYZ({
+          url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}',
+        }),
+        visible: false,
+      });
+      topoLayer.set('id', 'topo');
+
+      const hybridLayer = new Tile({
+        source: new XYZ({
+          url: 'https://mt1.google.com/vt/lyrs=p&x={x}&y={y}&z={z}',
+        }),
+        visible: false,
+      });
+      hybridLayer.set('id', 'hybrid');
+
       // Create a Layer Group for base layers
       const baseLayerGroup = new LayerGroup({
-        layers: [osmLayer, satelliteLayer],
+        layers: [osmLayer, satelliteLayer, topoLayer, hybridLayer],
       });
+
       // Add the Layer Group to the map
       this.map.addLayer(baseLayerGroup);
 
@@ -330,6 +347,14 @@ export class MapSection extends LitElement {
             <label>
               <input type="radio" name="baseLayerOption" value="satellite" />
               Satellite
+            </label>
+            <label>
+              <input type="radio" name="baseLayerOption" value="topo" />
+              Topo
+            </label>
+            <label>
+              <input type="radio" name="baseLayerOption" value="hybrid" />
+              Hybrid
             </label>
           </div>
         </div>
