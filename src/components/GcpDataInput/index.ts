@@ -1,11 +1,12 @@
 import { html, LitElement } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { customElement, property, state } from 'lit/decorators.js';
 import './csv-upload';
 import { Store } from '../../store';
 
 @customElement('gcp-data-input')
 export class GcpDataInput extends LitElement {
   @property({ type: String }) projection: string = Store.getProjection();
+  @state() errorMessage: string = '';
 
   createRenderRoot() {
     // Return `this` instead of a shadow root, meaning no Shadow DOM is used
@@ -13,7 +14,11 @@ export class GcpDataInput extends LitElement {
   }
 
   handleNextClick() {
-    if (!Store.getGcpData()?.length) return;
+    if (!Store.getGcpData()?.length) {
+      this.errorMessage = 'Please upload csv file';
+      return;
+    }
+    this.errorMessage = '';
     Store.setActiveStep(2);
   }
 
@@ -25,9 +30,13 @@ export class GcpDataInput extends LitElement {
         </div>
 
         <div class="tw-flex tw-flex-col tw-gap-5 tw-col-span-2 tw-bg-[#fff] tw-p-5 tw-rounded-xl tw-relative">
-          <csv-upload></csv-upload>
+          <csv-upload errorMessage=${this.errorMessage}></csv-upload>
+
           <div class="tw-absolute tw-bottom-4 tw-right-10">
-            <hot-button class="primary" @click=${() => this.handleNextClick()}>Next</hot-button>
+            <hot-button size="small" class="primary" @click=${() => this.handleNextClick()}>
+              Next
+              <span slot="suffix" class="material-symbols-outlined !tw-text-lg">chevron_right</span>
+            </hot-button>
           </div>
         </div>
       </div>
