@@ -7,7 +7,7 @@ import './csv-preview';
 @customElement('csv-upload')
 export class CsvUpload extends LitElement {
   @property({ type: Object }) gcpFile: File | null = null;
-  @state() errorMessage: string = '';
+  @property() errorMessage: string = '';
   createRenderRoot() {
     // Return `this` instead of a shadow root, meaning no Shadow DOM is used
     return this;
