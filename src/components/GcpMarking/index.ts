@@ -51,8 +51,14 @@ export class GcpMarking extends LitElement {
             <gcp-marking-table></gcp-marking-table>
           </div>
           <div class="tw-h-fit tw-py-5 tw-flex tw-justify-between">
-            <hot-button class="secondary" @click=${() => this.handlePreviousClick()}>Previous</hot-button>
-            <hot-button class="primary" @click=${() => this.handleNextClick()}>Next</hot-button>
+            <hot-button size="small" class="secondary" @click=${() => this.handlePreviousClick()}>
+              Previous
+              <span slot="prefix" class="material-symbols-outlined !tw-text-lg">chevron_left</span>
+            </hot-button>
+            <hot-button size="small" class="primary" @click=${() => this.handleNextClick()}>
+              Next
+              <span slot="suffix" class="material-symbols-outlined !tw-text-lg">chevron_right</span>
+            </hot-button>
           </div>
         </div>
         <div class="tw-col-span-3"><map-section></map-section></div>

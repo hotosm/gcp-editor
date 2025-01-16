@@ -3,16 +3,19 @@ import { css, html, LitElement } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { Map as OlMapInstance, Overlay } from 'ol';
 import TileLayer from 'ol/layer/WebGLTile.js';
-import { OSM } from 'ol/source';
+import { OSM, XYZ } from 'ol/source';
 import '@openlayers-elements/core/ol-map';
 import VectorSource from 'ol/source/Vector';
 import VectorLayer from 'ol/layer/Vector';
 import { GeoJSON } from 'ol/format';
 import { Style, Icon } from 'ol/style';
 import GeoTIFF from 'ol/source/GeoTIFF';
-import MarkerIcon from '../../assets/markerIcon.png';
+import LayerGroup from 'ol/layer/Group';
+import Tile from 'ol/layer/Tile';
 import { Store } from '../../store';
+import MarkerIcon from '../../assets/markerIcon.png';
 import uploadImage from '../../assets/uploadIcon.png';
+import layerSwitcher from '../../assets/layers.png';
 
 const cssTextOlPopupWrapper =
   'position: absolute; background-color: white; box-shadow: 0 1px 4px rgba(0,0,0,0.2); padding: 10px; border-radius: 10px; border: 1px solid #cccccc; bottom: 12px; left: -50px; min-width: 280px;';
@@ -28,6 +31,7 @@ export class MapSection extends LitElement {
   @state() popup: any;
   @state() gcpPointSource: any;
   @state() activeGcp: any;
+  @state() showBaseLayerList: boolean = false;
 
   private map!: OlMapInstance;
 
@@ -47,6 +51,44 @@ export class MapSection extends LitElement {
       overflow: hidden;
       position: relative;
     }
+    .base-layer-list {
+      position: absolute;
+      left: 35px;
+      top: 0px;
+      background: white;
+      display: none;
+      flex-direction: column;
+      width: 120px;
+      padding: 10px 10px;
+      border-radius: 8px;
+    }
+    .layer-switcher {
+      position: absolute;
+      top: 70px;
+      left: 10px;
+      height: 24px;
+      width: 24px;
+      background-color: white;
+      padding: 4px 4px;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+    .layer-switcher:hover {
+      background: #f7f6eb;
+      cursor: pointer;
+    }
+
+    .layer-switcher > input,
+    label:hover {
+      cursor: pointer;
+      background: #f7f6eb;
+    }
+
+    .layer-switcher > img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
   `;
 
   firstUpdated(): void {
@@ -56,9 +98,61 @@ export class MapSection extends LitElement {
 
     mapEl?.updateComplete?.then(() => {
       this.map = mapEl.map!;
-      // load osm base layer
-      const osm = new TileLayer({ source: new OSM() });
-      this.map.addLayer(osm);
+
+      // **********Base layer section***********
+      const osmLayer = new Tile({
+        source: new OSM(),
+        visible: true,
+      });
+      osmLayer.set('id', 'osm');
+
+      const satelliteLayer = new Tile({
+        source: new XYZ({
+          url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+        }),
+        visible: false,
+      });
+      satelliteLayer.set('id', 'satellite');
+
+      const topoLayer = new Tile({
+        source: new XYZ({
+          url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}',
+        }),
+        visible: false,
+      });
+      topoLayer.set('id', 'topo');
+
+      const hybridLayer = new Tile({
+        source: new XYZ({
+          url: 'https://mt1.google.com/vt/lyrs=p&x={x}&y={y}&z={z}',
+        }),
+        visible: false,
+      });
+      hybridLayer.set('id', 'hybrid');
+
+      // Create a Layer Group for base layers
+      const baseLayerGroup = new LayerGroup({
+        layers: [osmLayer, satelliteLayer, topoLayer, hybridLayer],
+      });
+
+      // Add the Layer Group to the map
+      this.map.addLayer(baseLayerGroup);
+
+      const baseLayerElements = this.shadowRoot?.querySelectorAll(
+        '.base-layer-list > label > input[type=radio]'
+      ) as NodeListOf<HTMLInputElement>;
+      for (let inputElement of baseLayerElements) {
+        inputElement.addEventListener('change', () => {
+          const baseLayerElement = inputElement.value;
+          baseLayerGroup.getLayers().forEach((element) => {
+            const baseLayerId = element.get('id');
+            element.setVisible(baseLayerElement === baseLayerId);
+            this.showBaseLayerList = false;
+          });
+        });
+      }
+      // **********Base layer section end***********
+
       this.loadGcpPoints(this.gcpPointGeojson);
 
       if (this.cogUrl) {
@@ -243,6 +337,27 @@ export class MapSection extends LitElement {
     return html`
       <div id="map-container">
         <ol-map id="gcp-map"></ol-map>
+        <div class="layer-switcher">
+          <img src=${layerSwitcher} @click=${() => (this.showBaseLayerList = !this.showBaseLayerList)} />
+          <div class="base-layer-list" style="display:${this.showBaseLayerList ? 'flex' : 'none'}">
+            <label>
+              <input type="radio" name="baseLayerOption" value="osm" checked />
+              OSM
+            </label>
+            <label>
+              <input type="radio" name="baseLayerOption" value="satellite" />
+              Satellite
+            </label>
+            <label>
+              <input type="radio" name="baseLayerOption" value="topo" />
+              Topo
+            </label>
+            <label>
+              <input type="radio" name="baseLayerOption" value="hybrid" />
+              Hybrid
+            </label>
+          </div>
+        </div>
       </div>
     `;
   }

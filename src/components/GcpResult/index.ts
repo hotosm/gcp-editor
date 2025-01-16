@@ -1,6 +1,7 @@
 import { css, html, LitElement, PropertyValues } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { Store } from '../../store';
+import chevronLeft from '../../assets/chevronLeft.png';
 
 // Define the type for a row in the gcp.txt file
 // [X Y Z ImageX ImageY FileName.jpg]
@@ -117,37 +118,41 @@ export class GcpResult extends LitElement {
 
     /* primary button */
     hot-button.primary::part(base) {
-      background-color: #d73f37;
+      background-color: #d73f3f;
       color: white !important;
       border: 0px;
+      font-weight: 600;
+      font-family: 'Barlow Condensed';
+      padding: 4px 4px;
+      font-size: 14px;
     }
+
     hot-button.primary::part(base):hover {
       background-color: #b91c1c;
     }
 
-    hot-button::part(base):hover {
-      border-color: #b91c1c;
-      color: #b91c1c;
-    }
-
-    hot-button.is-active::part(base) {
-      border-color: #b91c1c;
-      color: #b91c1c;
-    }
-
     /* secondary button */
     hot-button.secondary::part(base) {
-      border-color: #d73f37;
       background-color: white;
-      color: #b91c1c !important;
+      color: #d73f3f !important;
+      border: 0px;
+      font-weight: 600;
+      font-family: 'Barlow Condensed';
+      padding: 4px 4px;
+      font-size: 14px;
     }
     hot-button.secondary::part(base):hover {
-      text-decoration: underline;
-      text-decoration-color: #d73f37;
+      -webkit-box-shadow: -2px 2px 23px -6px rgba(0, 0, 0, 0.5);
+      -moz-box-shadow: -2px 2px 23px -6px rgba(0, 0, 0, 0.5);
+      box-shadow: -2px 2px 23px -6px rgba(0, 0, 0, 0.5);
     }
 
     hot-button.download::part(base):hover {
       background-color: #ff7b00;
+      font-weight: 600;
+      font-family: 'Barlow Condensed';
+      padding: 4px 4px;
+      font-size: 14px;
     }
     hot-button.download::part(base) {
       background-color: #ffa500;
@@ -286,15 +291,23 @@ export class GcpResult extends LitElement {
         </table>
       </div>
       <div class="button-wrapper">
-        <hot-button class="secondary" @click=${this.handlePreviousClick}>Previous</hot-button>
-
+        <hot-button size="small" class="secondary" @click=${this.handlePreviousClick}>
+          <img src=${chevronLeft} style="padding-right:12px" />
+          Previous
+        </hot-button>
         <div class="main-buttons">
-          <hot-button class=${this.customEvent ? 'download' : 'primary'} @click=${this.handleGcpFileDownload}>
+          <hot-button
+            size="small"
+            class=${this.customEvent ? 'download' : 'primary'}
+            @click=${this.handleGcpFileDownload}
+          >
             Download
           </hot-button>
           ${this.customEvent
             ? html`
-                <hot-button class="primary" @click=${this.handleFinalButtonClick}>${this.buttonText}</hot-button>
+                <hot-button size="small" class="primary" @click=${this.handleFinalButtonClick}>
+                  ${this.buttonText}
+                </hot-button>
               `
             : null}
         </div>

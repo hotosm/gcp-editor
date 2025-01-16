@@ -212,7 +212,7 @@ export class RawImageFetch extends LitElement {
           : html`
               <div></div>
             `}
-        <hot-button class="primary" @click=${() => this.updateGcpData()}>Save Changes</hot-button>
+        <hot-button size="small" class="primary" @click=${() => this.updateGcpData()}>Save Changes</hot-button>
       </div>
     `;
   }
