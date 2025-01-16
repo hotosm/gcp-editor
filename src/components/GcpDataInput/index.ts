@@ -2,6 +2,7 @@ import { html, LitElement } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import './csv-upload';
 import { Store } from '../../store';
+import sampleFile from '../../assets/sample.csv';
 
 @customElement('gcp-data-input')
 export class GcpDataInput extends LitElement {
@@ -26,7 +27,26 @@ export class GcpDataInput extends LitElement {
     return html`
       <div class="tw-grid tw-grid-cols-3 tw-gap-10 tw-h-full tw-w-full">
         <div class="tw-bg-[#fff] tw-w-full tw-h-full tw-p-5 tw-min-h-80 tw-col-span-1 tw-rounded-xl">
-          Information about csv format
+          <h1 class="tw-font-semibold tw-text-base">CSV Specification</h1>
+          <ul class="tw-list-decimal tw-list-inside">
+            <li class="tw-py-1 ">The Csv must contain at least 4 columns</li>
+            <li class="tw-py-1 ">The first row (header) must be GCP Label, X, Y, Z</li>
+            <li>No cells can be left blank</li>
+            <li class="tw-py-1 ">
+              Each subsequent row contains the label and coordinates of your ground control points (in the EPSG:4326)
+            </li>
+            <li class="tw-py-1 ">GCP Labels must be unique</li>
+            <li class="tw-py-4 tw-flex tw-items-center">
+              <span>Download example csv</span>
+              <a
+                href=${sampleFile}
+                download="sample.csv"
+                class="material-symbols-outlined hover:tw-text-primary tw-cursor-pointer"
+              >
+                download
+              </a>
+            </li>
+          </ul>
         </div>
 
         <div class="tw-flex tw-flex-col tw-gap-5 tw-col-span-2 tw-bg-[#fff] tw-p-5 tw-rounded-xl tw-relative">

@@ -16,6 +16,7 @@ esbuild
       '.png': 'dataurl',
       '.svg': 'dataurl',
       '.gif': 'dataurl',
+      '.csv': 'dataurl',
     },
     external: ['ol', 'lit*', '@lit/*'],
     plugins: [tailwindPlugin()],

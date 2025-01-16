@@ -67,7 +67,7 @@ export class GcpEditor extends LitElement {
 
   render() {
     return html`
-      <div class="tw-h-full tw-w-full tw-bg-[#ffffff]">
+      <div class="tw-h-full tw-w-full tw-bg-[#ffffff] tw-font-primary">
         <div class="tw-flex tw-flex-col tw-gap-3 tw-h-full tw-w-full">
           <div class="tw-flex tw-gap-2 tw-justify-center tw-py-3 tw-w-full">
             ${steps?.map(
