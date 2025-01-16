@@ -26,7 +26,9 @@ export class GcpDataInput extends LitElement {
   render() {
     return html`
       <div class="tw-grid tw-grid-cols-3 tw-gap-10 tw-h-full tw-w-full">
-        <div class="tw-bg-[#fff] tw-w-full tw-h-full tw-p-5 tw-min-h-80 tw-col-span-1 tw-rounded-xl">
+        <div
+          class="tw-bg-[#fff] tw-w-full tw-h-full tw-p-5 tw-min-h-80 tw-col-span-1 tw-rounded-xl tw-border tw-shadow-lg"
+        >
           <h1 class="tw-font-semibold tw-text-base">CSV Specification</h1>
           <ul class="tw-list-decimal tw-list-inside">
             <li class="tw-py-1 ">The Csv must contain at least 4 columns</li>
@@ -41,7 +43,8 @@ export class GcpDataInput extends LitElement {
               <a
                 href=${sampleFile}
                 download="sample.csv"
-                class="material-symbols-outlined hover:tw-text-primary tw-cursor-pointer"
+                class="material-symbols-outlined hover:tw-border-primary tw-cursor-pointer tw-px-1 tw-border-2 tw-border-[#fff]  tw-bg-primary tw-rounded-full tw-mx-2 !tw-text-base tw-text-[#fff] tw-transition-all tw-delay-150"
+                title="download sample .csv"
               >
                 download
               </a>
@@ -49,7 +52,9 @@ export class GcpDataInput extends LitElement {
           </ul>
         </div>
 
-        <div class="tw-flex tw-flex-col tw-gap-5 tw-col-span-2 tw-bg-[#fff] tw-p-5 tw-rounded-xl tw-relative">
+        <div
+          class="tw-flex tw-flex-col tw-gap-5 tw-col-span-2 tw-bg-[#fff] tw-p-5 tw-rounded-xl tw-relative tw-border tw-shadow-lg"
+        >
           <csv-upload errorMessage=${this.errorMessage}></csv-upload>
 
           <div class="tw-absolute tw-bottom-4 tw-right-10">
