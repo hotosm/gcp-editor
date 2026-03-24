@@ -1,5 +1,13 @@
 # Ground Control Point Editor
 
+> [!WARNING]
+>
+> Archived.
+>
+> This repo was moved to be a package in a monorepo.
+>
+> [https://github.com/hotosm/drone-tm/tree/dev/src/gcp-editor](https://github.com/hotosm/drone-tm/tree/dev/src/gcp-editor) 
+
 ## Install
 
 ```bash
